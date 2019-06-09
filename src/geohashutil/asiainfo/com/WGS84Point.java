@@ -8,7 +8,7 @@ public final class WGS84Point implements Serializable {
     public final double longitude;
     public final double latitude;
 
-    private WGS84Point(double latitude, double longitude) {
+    public WGS84Point(final double latitude, final double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
         if (Math.abs(latitude) > 90 || Math.abs(longitude) > 180) {
