@@ -50,10 +50,6 @@ public class GeoHashTest {
 
     @Test
     public void testDecode() {
-        long x = Long.valueOf("10100000100010100000000000000000000000000000000000",2);
-        GeoHash some = GeoHash.fromLongValue(x, (byte) 30);
-        String geohash = some.toBase32();
-        GeoHash failed = GeoHash.fromGeohashString(geohash);
         // for all lat/lon pairs check decoded point is in the same bbox as the
         // geohash formed by encoder
         for (GeoHash gh : RandomGeohashes.fullRange()) {
