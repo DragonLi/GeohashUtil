@@ -1,4 +1,4 @@
-package geohashutil.asiainfo.com;
+package geohashutil.asiainfo.com.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -6,6 +6,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Method;
 
+import geohashutil.asiainfo.com.BoundingBox;
+import geohashutil.asiainfo.com.GeoHash;
+import geohashutil.asiainfo.com.WGS84Point;
 import org.junit.Test;
 
 public class GeoHashTest {

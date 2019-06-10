@@ -1,5 +1,7 @@
 package geohashutil.asiainfo.com;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.io.Serializable;
 
 public class BoundingBox implements Serializable {
@@ -85,6 +87,10 @@ public class BoundingBox implements Serializable {
         double minLat = Math.min(other.getMinLat(), this.minLat);
         double maxLat = Math.max(other.getMaxLat(), this.maxLat);
         return new BoundingBox(minLat, maxLat, minLon, maxLon);
+    }
+
+    public BoundingBoxNavIterator navigate(){
+        throw new NotImplementedException();
     }
 
     @Override

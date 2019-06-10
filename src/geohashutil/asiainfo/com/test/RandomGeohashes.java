@@ -1,4 +1,6 @@
-package geohashutil.asiainfo.com;
+package geohashutil.asiainfo.com.test;
+
+import geohashutil.asiainfo.com.GeoHash;
 
 import java.util.ArrayList;
 import java.util.Iterator;
