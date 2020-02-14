@@ -89,7 +89,7 @@ public class BoundingBox implements Serializable {
         return new BoundingBox(minLat, maxLat, minLon, maxLon);
     }
 
-    public BoundingBoxNavIterator navigate(){
+    public BoundingBoxNavIterator navigate() {
         throw new NotImplementedException();
     }
 
@@ -100,7 +100,10 @@ public class BoundingBox implements Serializable {
         }
         if (obj instanceof BoundingBox) {
             BoundingBox that = (BoundingBox) obj;
-            return minLat == that.minLat && minLon == that.minLon && maxLat == that.maxLat && maxLon == that.maxLon;
+            return FloatNumUtils.Eq(minLat, that.minLat)
+                    && FloatNumUtils.Eq(minLon, that.minLon)
+                    && FloatNumUtils.Eq(maxLat, that.maxLat)
+                    && FloatNumUtils.Eq(maxLon, that.maxLon);
         } else {
             return false;
         }

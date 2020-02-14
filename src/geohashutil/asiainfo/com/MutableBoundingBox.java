@@ -123,7 +123,10 @@ public class MutableBoundingBox implements Serializable {
         }
         if (obj instanceof MutableBoundingBox) {
             MutableBoundingBox that = (MutableBoundingBox) obj;
-            return minLat == that.minLat && minLon == that.minLon && maxLat == that.maxLat && maxLon == that.maxLon;
+            return FloatNumUtils.Eq(minLat, that.minLat)
+                    && FloatNumUtils.Eq(minLon, that.minLon)
+                    && FloatNumUtils.Eq(maxLat, that.maxLat)
+                    && FloatNumUtils.Eq(maxLon, that.maxLon);
         } else {
             return false;
         }

@@ -39,7 +39,8 @@ public final class WGS84Point implements Serializable {
     public boolean equals(Object obj) {
         if (obj instanceof WGS84Point) {
             WGS84Point other = (WGS84Point) obj;
-            return latitude == other.latitude && longitude == other.longitude;
+            return FloatNumUtils.Eq(latitude, other.latitude)
+                    && FloatNumUtils.Eq(longitude, other.longitude);
         }
         return false;
     }

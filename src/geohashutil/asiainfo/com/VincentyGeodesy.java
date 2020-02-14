@@ -8,16 +8,14 @@ public class VincentyGeodesy {
     public static final double degToRad = 0.0174532925199433;
     static final double equatorRadiusSquared = equatorRadius * equatorRadius, poleRadiusSquared = poleRadius
             * poleRadius;
-    public static final double EPSILON = 1e-12;
 
     /**
      * returns the {@link WGS84Point} that is in the given direction at the
      * following distance of the given point.<br>
      * Uses Vincenty's formula and the WGS84 ellipsoid.
      *
-     * @param bearingInDegrees
-     *            : must be within 0 and 360
-     * @param point : where to start
+     * @param bearingInDegrees  : must be within 0 and 360
+     * @param point             : where to start
      * @param distanceInMeters: How far to move in the given direction
      */
     public static WGS84Point moveInDirection(WGS84Point point, double bearingInDegrees, double distanceInMeters) {
@@ -27,7 +25,7 @@ public class VincentyGeodesy {
         }
 
         double a = 6378137, b = 6356752.3142, f = 1 / 298.257223563; // WGS-84
-        // ellipsiod
+        // ellipsoids
         double alpha1 = bearingInDegrees * degToRad;
         double sinAlpha1 = Math.sin(alpha1), cosAlpha1 = Math.cos(alpha1);
 
@@ -42,7 +40,7 @@ public class VincentyGeodesy {
 
         double sinSigma = 0, cosSigma = 0, cos2SigmaM = 0;
         double sigma = distanceInMeters / (b * A), sigmaP = 2 * Math.PI;
-        while (Math.abs(sigma - sigmaP) > 1e-12) {
+        while (FloatNumUtils.NotEq(sigma, sigmaP)) {
             cos2SigmaM = Math.cos(2 * sigma1 + sigma);
             sinSigma = Math.sin(sigma);
             cosSigma = Math.cos(sigma);
@@ -84,12 +82,14 @@ public class VincentyGeodesy {
 
         double cosSqAlpha, sinSigma, cos2SigmaM, cosSigma, sigma;
 
-        double lambda = L, lambdaP, iterLimit = 20;
+        double lambda = L, lambdaP;
+        int iterLimit = 20;
         do {
             double sinLambda = Math.sin(lambda), cosLambda = Math.cos(lambda);
-            sinSigma = Math.sqrt((cosU2 * sinLambda) * (cosU2 * sinLambda)
-                    + (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda) * (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda));
-            if (sinSigma == 0) {
+            double v = cosU1 * sinU2 - sinU1 * cosU2 * cosLambda;
+            double u = cosU2 * sinLambda;
+            sinSigma = Math.sqrt(u * u + v * v);
+            if (FloatNumUtils.Eq(sinSigma, 0)) {
                 return 0; // co-incident points
             }
             cosSigma = sinU1 * sinU2 + cosU1 * cosU2 * cosLambda;
@@ -104,7 +104,7 @@ public class VincentyGeodesy {
             lambdaP = lambda;
             lambda = L + (1 - C) * f * sinAlpha
                     * (sigma + C * sinSigma * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)));
-        } while (Math.abs(lambda - lambdaP) > EPSILON && --iterLimit > 0);
+        } while (FloatNumUtils.NotEq(lambda, lambdaP) && --iterLimit > 0);
 
         if (iterLimit == 0) {
             return Double.NaN;
@@ -118,9 +118,8 @@ public class VincentyGeodesy {
                 / 4
                 * (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM) - B / 6 * cos2SigmaM
                 * (-3 + 4 * sinSigma * sinSigma) * (-3 + 4 * cos2SigmaM * cos2SigmaM)));
-        double s = b * A * (sigma - deltaSigma);
 
-        return s;
+        return b * A * (sigma - deltaSigma);
     }
 
 }
