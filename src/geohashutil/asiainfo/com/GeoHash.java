@@ -29,11 +29,43 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
 
     //cached computation results
     public final BoundingBox boundingBox;
+    /**
+     * 纬度,y
+     */
     public final long latBits;
+    /**
+     * 经度,x
+     */
     public final long lonBits;
 
     private String base32Encoding;
 //end cache
+
+    public GeoHash fromPrefix(byte prefixIndex){
+        if (prefixIndex <0 || prefixIndex >64)
+            return null;
+        long tmp = -1L << prefixIndex;
+        return GeoHash.fromLongValue(bits & tmp, (byte) (64 - prefixIndex));
+    }
+
+    public GridPoint getGridPoint(){
+        //the four-branching tree geohash represented is a number based on 4
+        //our max bits is 64, so unsigned int is enough to store,max = 2^32-1
+
+        //must scan every two bits,
+        int level = (significantBits+1)/2;
+        //odd length must pad, and I choose 0 to pad
+        long y = (significantBits & 0x01) == 0 ? latBits : latBits<<1;
+        return new GridPoint((int) lonBits, (int) y, (byte) level);
+    }
+
+    public double distanceByGrid(GridPoint p){
+        return p.distanceFrom(getGridPoint());
+    }
+
+    public double distanceByGrid(GeoHash geoHash){
+        return this.getGridPoint().distanceFrom(geoHash.getGridPoint());
+    }
 
     private GeoHash(final double latitude, final double longitude, int desiredPrecision) {
         desiredPrecision = Math.min(desiredPrecision, MAX_BIT_PRECISION);
@@ -49,7 +81,7 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
             significantBits++;
             bits <<= 1;
             if (isEvenBit) {
-                lonBits <<= 1;
+                lonBits <<= 1;//if I can use ref variables, the logBits/latBits can be abstracted to same function
                 mid = (lonMin + lonMax) / 2;
                 if (longitude < mid) {
                     lonMax = mid;

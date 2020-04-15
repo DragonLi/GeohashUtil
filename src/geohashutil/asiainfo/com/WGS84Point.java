@@ -5,7 +5,13 @@ import java.io.Serializable;
 //reference: geohash-java project
 public final class WGS84Point implements Serializable {
     private static final long serialVersionUID = 7457963026513014856L;
+    /**
+     * 经度,x
+     */
     public final double longitude;
+    /**
+     * 纬度,y
+     */
     public final double latitude;
 
     public WGS84Point(final double latitude, final double longitude) {

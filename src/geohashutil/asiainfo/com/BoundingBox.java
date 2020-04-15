@@ -32,10 +32,12 @@ public class BoundingBox implements Serializable {
     public WGS84Point getUpperLeft() {
         return WGS84Point.Create(maxLat, minLon);
     }
+    public GeoHash getUpperLeftHash(int level){return GeoHash.withBitPrecision(maxLat,minLon,level);}
 
     public WGS84Point getLowerRight() {
         return WGS84Point.Create(minLat, maxLon);
     }
+    public GeoHash getLowerRightHash(int level) {return GeoHash.withBitPrecision(minLat, maxLon,level);}
 
     public WGS84Point getCenterPoint() {
         return WGS84Point.Create((minLat + maxLat) / 2, (minLon + maxLon) / 2);

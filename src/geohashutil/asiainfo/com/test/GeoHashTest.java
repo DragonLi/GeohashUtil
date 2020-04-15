@@ -8,11 +8,12 @@ import java.lang.reflect.Method;
 
 import geohashutil.asiainfo.com.BoundingBox;
 import geohashutil.asiainfo.com.GeoHash;
+import geohashutil.asiainfo.com.GeoHashSearchUtil;
 import geohashutil.asiainfo.com.WGS84Point;
+import javafx.util.Pair;
 import org.junit.Test;
 
 public class GeoHashTest {
-
     private void assertWithin(GeoHash hash, GeoHash bbox) {
         assertTrue(hash + " should be within " + bbox, hash.within(bbox));
     }
@@ -21,6 +22,52 @@ public class GeoHashTest {
         System.out.println("Bounding Box: \ncenter =" + hash.boundingBox.getCenterPoint());
         System.out.print("corners=");
         System.out.println(hash.boundingBox);
+    }
+
+    @Test
+    public void testFromPrefix(){
+        double lng=112.1213;
+        double lat=32.214;
+        GeoHash hash = GeoHash.withBitPrecision(lat, lng, 40);
+        //1110010011111011110110111000101001010000000000000000000000000000
+        GeoHash prefix = hash.fromPrefix((byte) 58);
+        System.out.println(Long.toBinaryString(hash.bits));
+        System.out.println(Long.toBinaryString(prefix.bits));
+        assertEquals(Long.toBinaryString(hash.bits),"1110010000000000000000000000000000000000000000000000000000000000");
+    }
+
+    @Test
+    public void testComparePrefix(){
+        double lng=112.1213;
+        double lat=32.214;
+        GeoHash a = GeoHash.withBitPrecision(lat, lng, 40);
+        //1110010011111011110110111000101001010000000000000000000000000000
+        GeoHash b = GeoHash.withBitPrecision(lat+0.01, lng+0.01, 40);
+        //1110010011111011110110111011000010111100000000000000000000000000
+        System.out.println(Long.toBinaryString(a.bits));
+        System.out.println(Long.toBinaryString(b.bits));
+        byte index = GeoHashSearchUtil.comparePrefix(a.bits,b.bits);
+        System.out.println(index);
+        GeoHash prefix = a.fromPrefix(index);
+        System.out.println(Long.toBinaryString(prefix.bits));
+        assertEquals(index,64-"11100100111110111101101110".length());
+        assertEquals(Long.toBinaryString(prefix.bits),"1110010011111011110110111000000000000000000000000000000000000000");
+    }
+
+    @Test
+    public void testLeastBoundingGeoGrid(){
+        double lng=112.1213;
+        double lat=32.214;
+        WGS84Point a = WGS84Point.Create(lat,lng);
+        WGS84Point b = WGS84Point.Create(lat+0.01,lng+0.01);
+        BoundingBox box = new BoundingBox(a,b);
+        Pair<GeoHash,GeoHash> pair = GeoHashSearchUtil.leastBoundingGeoGrid(box);
+        GeoHash key = pair.getKey();
+        System.out.println(key);
+        System.out.println(pair.getValue());
+        assertEquals(Long.toBinaryString(key.bits),"1110010011111011110110111000000000000000000000000000000000000000");
+        assertEquals(key.significantBits,26);
+        assertEquals(pair.getValue(),null);
     }
 
     @Test
