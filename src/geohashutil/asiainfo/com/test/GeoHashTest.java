@@ -6,10 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Method;
 
-import geohashutil.asiainfo.com.BoundingBox;
-import geohashutil.asiainfo.com.GeoHash;
-import geohashutil.asiainfo.com.GeoHashSearchUtil;
-import geohashutil.asiainfo.com.WGS84Point;
+import geohashutil.asiainfo.com.*;
 import javafx.util.Pair;
 import org.junit.Test;
 
@@ -33,7 +30,7 @@ public class GeoHashTest {
         GeoHash prefix = hash.fromPrefix((byte) 58);
         System.out.println(Long.toBinaryString(hash.bits));
         System.out.println(Long.toBinaryString(prefix.bits));
-        assertEquals(Long.toBinaryString(hash.bits),"1110010000000000000000000000000000000000000000000000000000000000");
+        assertEquals(Long.toBinaryString(prefix.bits),"1110010000000000000000000000000000000000000000000000000000000000");
     }
 
     @Test
@@ -52,6 +49,32 @@ public class GeoHashTest {
         System.out.println(Long.toBinaryString(prefix.bits));
         assertEquals(index,64-"11100100111110111101101110".length());
         assertEquals(Long.toBinaryString(prefix.bits),"1110010011111011110110111000000000000000000000000000000000000000");
+    }
+
+    @Test
+    public void testLeastBoundingSlice(){
+        double lng=112.1213;
+        double lat=32.214;
+        double width = Math.random()*0.01+0.1;
+        double height = width * (Math.random()*0.2+0.8);
+        int level = 36;
+        BoundingBox box = new BoundingBox(lat-height,lat+height,lng-width,lng+width);
+        System.out.println(width);
+        System.out.println(height);
+        System.out.println(box);
+        Tuple4List<GeoHash> slices = GeoHashSearchUtil.leastBoundingSlice(box,level);
+        GeoHash ltg = slices.item1, rtg = slices.item2;
+        GeoHash lbg = slices.item3, rbg=slices.item4;
+        System.out.println(ltg);
+        System.out.println(rtg);
+        System.out.println(lbg);
+        System.out.println(rbg);
+        GeoHash ltgW = ltg.getEasternNeighbour();
+        //assertEquals(0,ltgW.compareTo(rtg));
+        WGS84Point upperLeft = box.getUpperLeft();
+        WGS84Point lowerRight = box.getLowerRight();
+        assertEquals(true,ltg.boundingBox.contains(upperLeft) || lbg.boundingBox.contains(upperLeft));
+        assertEquals(true,rbg.boundingBox.contains(lowerRight) || rtg.boundingBox.contains(lowerRight));
     }
 
     @Test

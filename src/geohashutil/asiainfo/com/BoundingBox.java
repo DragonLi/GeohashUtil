@@ -5,9 +5,21 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.io.Serializable;
 
 public class BoundingBox implements Serializable {
+    /**
+     * 纬度,y
+     */
     public final double minLat;
+    /**
+     * 纬度,y
+     */
     public final double maxLat;
+    /**
+     * 经度,x
+     */
     public final double minLon;
+    /**
+     * 经度,x
+     */
     public final double maxLon;
 
     /**
@@ -53,10 +65,18 @@ public class BoundingBox implements Serializable {
         return result;
     }
 
+    /**
+     * 纬度,y
+     * @return 高度
+     */
     public double getLatitudeSize() {
         return maxLat - minLat;
     }
 
+    /**
+     * 经度,x
+     * @return 宽度
+     */
     public double getLongitudeSize() {
         return maxLon - minLon;
     }

@@ -41,6 +41,17 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
     private String base32Encoding;
 //end cache
 
+    public GeoHash dropSignificantBits(int k) {
+        if (k >= significantBits)
+            return null;
+        if (k <=0)
+            return this;
+        int newLength = significantBits - k;
+        int prefixIndex = 64- newLength;
+        long tmp = -1L << prefixIndex;
+        return GeoHash.fromLongValue(bits & tmp, (byte) newLength);
+    }
+
     public GeoHash fromPrefix(byte prefixIndex){
         if (prefixIndex <0 || prefixIndex >64)
             return null;
@@ -411,6 +422,7 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
 
     /**
      * returns true iff this is within the given geohash bounding box.
+     * that is boundingBox contains this grid
      */
     public boolean within(GeoHash boundingBox) {
         return (bits & boundingBox.mask()) == boundingBox.bits;

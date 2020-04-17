@@ -5,6 +5,8 @@ import javafx.util.Pair;
 public class GeoHashSearchUtil {
     private static final int MAX_LEVEL = 40;//40位GeoHash精度约为20米
     private static final byte[] maskPosIndex;
+    public static final double LOG2BASE = Math.log(2);
+
     static {
         maskPosIndex = new byte[256];
         byte c = 0;//最右面的位置是0
@@ -60,5 +62,48 @@ public class GeoHashSearchUtil {
         }
         prefixIndex -=prefixAdjust;
         return new Pair<>(leftTop.fromPrefix(prefixIndex),rightBottom.fromPrefix(prefixIndex));
+    }
+
+    public static Tuple4List<GeoHash> leastBoundingSliceMerged(final BoundingBox box,final int maxLevel){
+        return mergeSlices(leastBoundingSlice(box, maxLevel));
+    }
+
+    public static Tuple4List<GeoHash> leastBoundingSlice(final BoundingBox box,final int maxLevel){
+        final double centerLat = (box.minLat + box.maxLat) / 2;
+        final double centerLon = (box.minLon + box.maxLon) / 2;
+        final double width = box.getLongitudeSize();
+        final double height = box.getLatitudeSize();
+        final double half = Math.max(width,height)/2;
+        GeoHash ltg = GeoHash.withBitPrecision(centerLat+half,centerLon-half,maxLevel);
+        GeoHash rtg = GeoHash.withBitPrecision(centerLat+half,centerLon+half,maxLevel);
+        long diff = rtg.lonBits - ltg.lonBits;
+        int k = (int) Math.floor(Math.log(diff)/ LOG2BASE);
+        if ((rtg.lonBits >> k) - (ltg.lonBits >> k) > 1){
+            ++k;
+        }
+        k = 2*k;
+        ltg = ltg.dropSignificantBits(k);
+        rtg = rtg.dropSignificantBits(k);
+        GeoHash lbg = ltg.getSouthernNeighbour();
+        GeoHash rbg = rtg.getSouthernNeighbour();
+        return new Tuple4List<>(ltg,rtg,lbg,rbg);
+    }
+
+    public static Tuple4List<GeoHash> mergeSlices(Tuple4List<GeoHash> slices){
+        GeoHash ltg,rbg;
+        ltg = slices.item1;
+        rbg = slices.item4;
+        long diffX = ltg.lonBits ^ rbg.lonBits;
+        long diffY = ltg.latBits ^ rbg.latBits;
+        if (diffX == 1 && diffY == 1){
+            //01,01 -> merge into one big slice
+            return new Tuple4List<>(ltg.dropSignificantBits(2),null,null,null);
+        }
+        if (diffY == 1){
+            //01,11 -> merge along y-axis
+            return new Tuple4List<>(ltg.dropSignificantBits(1),rbg.dropSignificantBits(1),null,null);
+        }
+        //all other cases cant merge
+        return slices;
     }
 }
