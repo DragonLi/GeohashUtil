@@ -35,6 +35,7 @@ public class GridPoint {
             small = other;
         }
         int diff =  large.level - small.level;
+        //TODO diff may not add to final result becaue in real GIS they may be shortcut between levels (jump from level 18 to 10)
         return diff + EulerDistance(large.x >> diff,large.y >> diff,small.x,small.y);
     }
 }

@@ -26,7 +26,7 @@ public class GeoHashSearchUtil {
         for (int i = 0; i < 8; i++) {
             rShift -= 8;
             index -=8;
-            byte d = (byte) ((c >> rShift) & 0x00000000000000FFL);
+            int d = (int) ((c >> rShift) & 0x00000000000000FFL);
             if (d > 0)
             {
                 index += maskPosIndex[d];
@@ -39,11 +39,15 @@ public class GeoHashSearchUtil {
     public static Pair<GeoHash,GeoHash> leastBoundingGeoGrid(BoundingBox box){
         GeoHash leftTop = box.getUpperLeftHash(MAX_LEVEL);
         GeoHash rightBottom = box.getLowerRightHash(MAX_LEVEL);
+        return leastBoundingGeoGrid(leftTop, rightBottom);
+    }
+
+    public static Pair<GeoHash, GeoHash> leastBoundingGeoGrid(GeoHash leftTop, GeoHash rightBottom) {
         byte prefixIndex = comparePrefix(leftTop.bits,rightBottom.bits);
         byte prefixAdjust;
         if (prefixIndex%2 == 0){
-            if (prefixIndex >= 1){
-                long testNextIndex = 1L << (prefixIndex-1);
+            if (prefixIndex >= 2){
+                long testNextIndex = 1L << (prefixIndex-2);
                 long cmp = leftTop.bits ^ rightBottom.bits;
                 long test = cmp & testNextIndex;
                 if (test > 0){
@@ -54,7 +58,7 @@ public class GeoHashSearchUtil {
         }else{
             prefixAdjust=1;
         }
-        prefixIndex +=prefixAdjust;
+        prefixIndex -=prefixAdjust;
         return new Pair<>(leftTop.fromPrefix(prefixIndex),rightBottom.fromPrefix(prefixIndex));
     }
 }
