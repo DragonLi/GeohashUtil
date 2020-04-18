@@ -143,6 +143,6 @@ public class BoundingBox implements Serializable {
 
     @Override
     public String toString() {
-        return getUpperLeft() + " -> " + getLowerRight();
+        return getLowerLeft() + " -> " + getUpperRight();
     }
 }

@@ -80,22 +80,26 @@ public class GeoHashSearchUtil {
         final double ty = (LOG180D - Math.log(halfY))/LOG2BASE;
         final int ky = (int) (Math.floor(ty));
         final int k = Math.min(kx,ky) *2;
-        GeoHash ltg = GeoHash.withBitPrecision(centerLat+halfY,centerLon-halfX,k);
-        GeoHash rbg = GeoHash.withBitPrecision(centerLat-halfY,centerLon+halfX,k);
+        GeoHash lbg = GeoHash.withBitPrecision(centerLat-halfY,centerLon-halfX,k);
+        GeoHash rtg = GeoHash.withBitPrecision(centerLat+halfY,centerLon+halfX,k);
         List<GeoHash> result = new ArrayList<>(9);
-        final long startX = ltg.lonBits;
-        final long endX = rbg.lonBits;
-        final long startY = ltg.latBits;
-        final long endY = rbg.latBits;
+        final long startX = lbg.lonBits;
+        final long startY = lbg.latBits;
+        final long endX = rtg.lonBits;
+        final long endY = rtg.latBits;
+        GeoHash curX = lbg;
         for (long x = startX; x <=endX ; ++x) {
-            for (long y = endY; y <= startY; ++y) {
-                if (x == startX && y == startY){
-                    result.add(ltg);
-                }else if (x == endX && y == endY){
-                    result.add(rbg);
-                }else{
-                    result.add(GeoHash.recombineLatLonBits(x,y,k));
+            GeoHash curY = curX;
+            if (x < endX)
+                curX = curX.getEasternNeighbour();
+            for (long y = startY; y <= endY; ++y) {
+                if (x == endX && y == endY){
+                    result.add(rtg);
+                }else {
+                    result.add(curY);
                 }
+                if (y < endY)
+                    curY = curY.getNorthernNeighbour();
             }
         }
         return result;
@@ -107,20 +111,16 @@ public class GeoHashSearchUtil {
 
     private static List<GeoHash> mergeSlices(List<GeoHash> slices){
         final GeoHash lbg = slices.get(0);
-        final GeoHash rtg=slices.get(slices.size());
-        for (long x = lbg.lonBits; x <=rtg.lonBits ; ++x) {
-            for (long y = lbg.latBits; y <= rtg.latBits; ++y) {
+        final GeoHash rtg = slices.get(slices.size()-1);
+        final long maxY = rtg.latBits;
+        final long minY = lbg.latBits;
+        if (maxY - minY == 1){
+            if ((maxY ^ minY) == 1){
+                //merge along y-axis
             }
+        }else if (maxY - minY == 2){
+            //test 2 combination
         }
-        long diffX = lbg.lonBits ^ rtg.lonBits;
-        long diffY = lbg.latBits ^ rtg.latBits;
-        if (diffX == 1 && diffY == 1){
-            //01,01 -> merge into one big slice
-        }
-        if (diffY == 1){
-            //01,11 -> merge along y-axis
-        }
-        //all other cases cant merge
         return slices;
     }
 

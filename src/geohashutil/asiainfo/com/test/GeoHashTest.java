@@ -1,15 +1,17 @@
 package geohashutil.asiainfo.com.test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
+import geohashutil.asiainfo.com.BoundingBox;
+import geohashutil.asiainfo.com.GeoHash;
+import geohashutil.asiainfo.com.GeoHashSearchUtil;
+import geohashutil.asiainfo.com.WGS84Point;
+import javafx.util.Pair;
+import org.junit.Test;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
-import geohashutil.asiainfo.com.*;
-import javafx.util.Pair;
-import org.junit.Test;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class GeoHashTest {
     private void assertWithin(GeoHash hash, GeoHash bbox) {
@@ -57,6 +59,14 @@ public class GeoHashTest {
         BoundingBox box = prepareBoundingBox();
         List<GeoHash> slices = GeoHashSearchUtil.leastBoundingSlice(box);
         testSliceCoverBox(box, slices);
+        /*
+        GeoHash p = slices.get(0);
+        byte len = p.significantBits;
+        int k = len / 2;
+        double width = box.getLongitudeSize();
+        double height = box.getLatitudeSize();
+        assertTrue((180 / Math.pow(2, k + 1)) < height / 2 || (360 / Math.pow(2, k + 1)) < width / 2);
+        */
     }
 
     @Test
@@ -84,6 +94,7 @@ public class GeoHashTest {
         testSliceCoverCorner(box, slices, upperRight);
         WGS84Point lowerLeft = box.getLowerLeft();
         testSliceCoverCorner(box, slices, lowerLeft);
+        assertTrue(slices.size() <= 9);
     }
 
     private void testSliceCoverCorner(BoundingBox box, List<GeoHash> slices, WGS84Point lowerRight) {
@@ -100,7 +111,7 @@ public class GeoHashTest {
                 System.out.println(geoHash);
             }
         }
-        assertEquals(true, isCovered);
+        assertTrue( isCovered);
     }
 
     @Test

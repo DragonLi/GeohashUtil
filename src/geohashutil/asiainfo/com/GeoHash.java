@@ -285,7 +285,7 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
         if (numberOfBits > MAX_BIT_PRECISION || numberOfBits <=0) {
             throw new IllegalArgumentException("A Geohash can only be " + MAX_BIT_PRECISION + " bits long!");
         }
-        return recombineLatLonBitsToHash(latBits,lngBits, (byte) numberOfBits);
+        return recombineLatLonBitsToHash(latBits,lngBits, (byte) (MAX_BIT_PRECISION-numberOfBits));
     }
 
     public static GeoHash withBitPrecision(final double latitude, final double longitude, int numberOfBits) {
