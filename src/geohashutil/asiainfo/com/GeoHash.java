@@ -153,8 +153,13 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
     }
 
     protected GeoHash recombineLatLonBitsToHash(final long latBits, final long lonBits) {
-        long bits = 0;
         final byte significantBits = this.significantBits;
+        return recombineLatLonBitsToHash(latBits, lonBits, significantBits);
+    }
+
+    private static GeoHash recombineLatLonBitsToHash(final long latBits, final long lonBits
+            , final byte significantBits) {
+        long bits = 0;
         boolean isEvenBit = false;
         double latMin = -90, latMax = 90;
         double lonMin = -180, lonMax = 180;
@@ -275,6 +280,12 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
         } else {
             return Integer.compare(significantBits, o.significantBits);
         }
+    }
+    public static GeoHash recombineLatLonBits(final long latBits,final long lngBits, final int numberOfBits){
+        if (numberOfBits > MAX_BIT_PRECISION || numberOfBits <=0) {
+            throw new IllegalArgumentException("A Geohash can only be " + MAX_BIT_PRECISION + " bits long!");
+        }
+        return recombineLatLonBitsToHash(latBits,lngBits, (byte) numberOfBits);
     }
 
     public static GeoHash withBitPrecision(final double latitude, final double longitude, int numberOfBits) {

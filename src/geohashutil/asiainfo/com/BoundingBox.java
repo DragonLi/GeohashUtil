@@ -41,6 +41,16 @@ public class BoundingBox implements Serializable {
     }
 
     //TODO might need cached
+    public WGS84Point getUpperRight() {
+        return WGS84Point.Create(maxLat, maxLon);
+    }
+    public GeoHash getUpperRightHash(int level){return GeoHash.withBitPrecision(maxLat,maxLon,level);}
+
+    public WGS84Point getLowerLeft() {
+        return WGS84Point.Create(minLat, minLon);
+    }
+    public GeoHash getLowerLeftHash(int level){return GeoHash.withBitPrecision(minLat,minLon,level);}
+
     public WGS84Point getUpperLeft() {
         return WGS84Point.Create(maxLat, minLon);
     }

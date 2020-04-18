@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 import geohashutil.asiainfo.com.*;
@@ -55,44 +54,53 @@ public class GeoHashTest {
 
     @Test
     public void testLeastBoundingSlice(){
+        BoundingBox box = prepareBoundingBox();
+        List<GeoHash> slices = GeoHashSearchUtil.leastBoundingSlice(box);
+        testSliceCoverBox(box, slices);
+    }
+
+    @Test
+    public void testLeastBoundingSliceMerged(){
+        BoundingBox box = prepareBoundingBox();
+        List<GeoHash> slices = GeoHashSearchUtil.leastBoundingSliceMerged(box);
+        testSliceCoverBox(box, slices);
+    }
+
+    private BoundingBox prepareBoundingBox(){
         double lng=112.1213;
         double lat=32.214;
         double width = Math.random()*0.5+0.01;
         double height = width * (Math.random()*0.6+0.7);
-//        double width = 0.28996077859955427;
-//        double height = 0.31703259012312285;
-        int level = 36;
         BoundingBox box = new BoundingBox(lat-height,lat+height,lng-width,lng+width);
-        Sharp9Square slices = GeoHashSearchUtil.leastBoundingSlice(box,level);
-        GeoHash p11 = slices.p11, p12 = slices.p12, p13 = slices.p13;
-        GeoHash p21 = slices.p21, p22 = slices.p22, p23 = slices.p23;
-        GeoHash p31 = slices.p31, p32 = slices.p32, p33 = slices.p33;
+        return box;
+    }
+
+    private void testSliceCoverBox(BoundingBox box, List<GeoHash> slices) {
         WGS84Point upperLeft = box.getUpperLeft();
+        testSliceCoverCorner(box, slices, upperLeft);
         WGS84Point lowerRight = box.getLowerRight();
-        assertEquals(true,p11.boundingBox.contains(upperLeft));
-        List<GeoHash> sliceLst = GeoHashSearchUtil.convertToList(slices);
+        testSliceCoverCorner(box, slices, lowerRight);
+        WGS84Point upperRight = box.getUpperRight();
+        testSliceCoverCorner(box, slices, upperRight);
+        WGS84Point lowerLeft = box.getLowerLeft();
+        testSliceCoverCorner(box, slices, lowerLeft);
+    }
+
+    private void testSliceCoverCorner(BoundingBox box, List<GeoHash> slices, WGS84Point lowerRight) {
         boolean isCovered = false;
-        for (GeoHash geoHash : sliceLst) {
-            if (geoHash.boundingBox.contains(lowerRight)){
-                isCovered =true;
+        for (GeoHash geoHash : slices) {
+            if (geoHash.boundingBox.contains(lowerRight)) {
+                isCovered = true;
                 break;
             }
         }
-        if (!isCovered){
-            System.out.println(width);
-            System.out.println(height);
+        if (!isCovered) {
             System.out.println(box);
-            System.out.println(p11);
-            System.out.println(p12);
-            System.out.println(p13);
-            System.out.println(p21);
-            System.out.println(p22);
-            System.out.println(p23);
-            System.out.println(p31);
-            System.out.println(p32);
-            System.out.println(p33);
+            for (GeoHash geoHash : slices) {
+                System.out.println(geoHash);
+            }
         }
-        assertEquals(true,isCovered);
+        assertEquals(true, isCovered);
     }
 
     @Test

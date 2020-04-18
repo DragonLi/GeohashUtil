@@ -68,82 +68,60 @@ public class GeoHashSearchUtil {
         return new Pair<>(leftTop.fromPrefix(prefixIndex),rightBottom.fromPrefix(prefixIndex));
     }
 
-    public static Sharp9Square leastBoundingSlice(final BoundingBox box, final int maxLevel){
+    public static List<GeoHash> leastBoundingSlice(final BoundingBox box){
         final double centerLat = (box.minLat + box.maxLat) / 2;
         final double centerLon = (box.minLon + box.maxLon) / 2;
         final double width = box.getLongitudeSize();
         final double height = box.getLatitudeSize();
         final double halfX = width/2;
         final double halfY = height/2;
-        double tx = (LOG180D - Math.log(halfX))/LOG2BASE;
-        int kx = (int) (Math.floor(tx));
-        double ty = (LOG180D - Math.log(halfY))/LOG2BASE;
-        int ky = (int) (Math.floor(ty));
-        int k = Math.min(kx,ky) *2;
-        WGS84Point rt = new WGS84Point(centerLat+halfY,centerLon+halfX);
-        WGS84Point lb = new WGS84Point(centerLat-halfY,centerLon-halfX);
-        GeoHash p11 = GeoHash.withBitPrecision(centerLat+halfY,centerLon-halfX,k);
-        GeoHash             p12 = null, p13 = null,
-                p21 = null, p22 = null, p23 = null,
-                p31 = null, p32 = null, p33 = null;
-        if (!p11.boundingBox.contains(rt)){
-            p12 = p11.getEasternNeighbour();
-            if (!p12.boundingBox.contains(rt)){
-                p13 = p12.getEasternNeighbour();
+        final double tx = (LOG180D - Math.log(halfX))/LOG2BASE;
+        final int kx = (int) (Math.floor(tx));
+        final double ty = (LOG180D - Math.log(halfY))/LOG2BASE;
+        final int ky = (int) (Math.floor(ty));
+        final int k = Math.min(kx,ky) *2;
+        GeoHash ltg = GeoHash.withBitPrecision(centerLat+halfY,centerLon-halfX,k);
+        GeoHash rbg = GeoHash.withBitPrecision(centerLat-halfY,centerLon+halfX,k);
+        List<GeoHash> result = new ArrayList<>(9);
+        final long startX = ltg.lonBits;
+        final long endX = rbg.lonBits;
+        final long startY = ltg.latBits;
+        final long endY = rbg.latBits;
+        for (long x = startX; x <=endX ; ++x) {
+            for (long y = endY; y <= startY; ++y) {
+                if (x == startX && y == startY){
+                    result.add(ltg);
+                }else if (x == endX && y == endY){
+                    result.add(rbg);
+                }else{
+                    result.add(GeoHash.recombineLatLonBits(x,y,k));
+                }
             }
         }
-        if (!p11.boundingBox.contains(lb)){
-            p21 = p11.getSouthernNeighbour();
-            if (p12 != null)
-                p22 = p12.getSouthernNeighbour();
-            if (p13 != null)
-                p23 = p13.getSouthernNeighbour();
-            if (!p21.boundingBox.contains(lb)){
-                p31 = p21.getSouthernNeighbour();
-                if (p22 != null)
-                    p32 = p22.getSouthernNeighbour();
-                if (p23 != null)
-                    p33 = p23.getSouthernNeighbour();
+        return result;
+    }
+
+    public static List<GeoHash> leastBoundingSliceMerged(final BoundingBox box){
+        return mergeSlices(leastBoundingSlice(box));
+    }
+
+    private static List<GeoHash> mergeSlices(List<GeoHash> slices){
+        final GeoHash lbg = slices.get(0);
+        final GeoHash rtg=slices.get(slices.size());
+        for (long x = lbg.lonBits; x <=rtg.lonBits ; ++x) {
+            for (long y = lbg.latBits; y <= rtg.latBits; ++y) {
             }
         }
-        return new Sharp9Square(p11,p12,p13,p21,p22,p23,p31,p32,p33);
-    }
-
-    public static List<GeoHash> convertToList(Sharp9Square slice){
-        ArrayList<GeoHash> sliceLst = new ArrayList<>(9);
-        sliceLst.add(slice.p11);
-        if (slice.p12 != null) sliceLst.add(slice.p12);
-        if (slice.p13 != null) sliceLst.add(slice.p13);
-        if (slice.p21 != null) sliceLst.add(slice.p21);
-        if (slice.p22 != null) sliceLst.add(slice.p22);
-        if (slice.p23 != null) sliceLst.add(slice.p23);
-        if (slice.p31 != null) sliceLst.add(slice.p31);
-        if (slice.p32 != null) sliceLst.add(slice.p32);
-        if (slice.p33 != null) sliceLst.add(slice.p33);
-        return sliceLst;
-    }
-/*
-    public static Sharp9Square<GeoHash> leastBoundingSliceMerged(final BoundingBox box, final int maxLevel){
-        return mergeSlices(leastBoundingSlice(box, maxLevel));
-        return null;
-    }
-
-    public static Sharp9Square<GeoHash> mergeSlices(Sharp9Square<GeoHash> slices){
-        GeoHash ltg,rbg;
-        ltg = slices.item1;
-        rbg = slices.item4;
-        long diffX = ltg.lonBits ^ rbg.lonBits;
-        long diffY = ltg.latBits ^ rbg.latBits;
+        long diffX = lbg.lonBits ^ rtg.lonBits;
+        long diffY = lbg.latBits ^ rtg.latBits;
         if (diffX == 1 && diffY == 1){
             //01,01 -> merge into one big slice
-            return new Sharp9Square<>(ltg.dropSignificantBits(2),null,null,null);
         }
         if (diffY == 1){
             //01,11 -> merge along y-axis
-            return new Sharp9Square<>(ltg.dropSignificantBits(1),rbg.dropSignificantBits(1),null,null);
         }
         //all other cases cant merge
         return slices;
     }
-*/
+
 }
