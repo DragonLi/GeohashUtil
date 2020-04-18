@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import geohashutil.asiainfo.com.*;
 import javafx.util.Pair;
@@ -55,26 +57,42 @@ public class GeoHashTest {
     public void testLeastBoundingSlice(){
         double lng=112.1213;
         double lat=32.214;
-        double width = Math.random()*0.01+0.1;
-        double height = width * (Math.random()*0.2+0.8);
+        double width = Math.random()*0.5+0.01;
+        double height = width * (Math.random()*0.6+0.7);
+//        double width = 0.28996077859955427;
+//        double height = 0.31703259012312285;
         int level = 36;
         BoundingBox box = new BoundingBox(lat-height,lat+height,lng-width,lng+width);
-        System.out.println(width);
-        System.out.println(height);
-        System.out.println(box);
-        Tuple4List<GeoHash> slices = GeoHashSearchUtil.leastBoundingSlice(box,level);
-        GeoHash ltg = slices.item1, rtg = slices.item2;
-        GeoHash lbg = slices.item3, rbg=slices.item4;
-        System.out.println(ltg);
-        System.out.println(rtg);
-        System.out.println(lbg);
-        System.out.println(rbg);
-        GeoHash ltgW = ltg.getEasternNeighbour();
-        //assertEquals(0,ltgW.compareTo(rtg));
+        Sharp9Square slices = GeoHashSearchUtil.leastBoundingSlice(box,level);
+        GeoHash p11 = slices.p11, p12 = slices.p12, p13 = slices.p13;
+        GeoHash p21 = slices.p21, p22 = slices.p22, p23 = slices.p23;
+        GeoHash p31 = slices.p31, p32 = slices.p32, p33 = slices.p33;
         WGS84Point upperLeft = box.getUpperLeft();
         WGS84Point lowerRight = box.getLowerRight();
-        assertEquals(true,ltg.boundingBox.contains(upperLeft) || lbg.boundingBox.contains(upperLeft));
-        assertEquals(true,rbg.boundingBox.contains(lowerRight) || rtg.boundingBox.contains(lowerRight));
+        assertEquals(true,p11.boundingBox.contains(upperLeft));
+        List<GeoHash> sliceLst = GeoHashSearchUtil.convertToList(slices);
+        boolean isCovered = false;
+        for (GeoHash geoHash : sliceLst) {
+            if (geoHash.boundingBox.contains(lowerRight)){
+                isCovered =true;
+                break;
+            }
+        }
+        if (!isCovered){
+            System.out.println(width);
+            System.out.println(height);
+            System.out.println(box);
+            System.out.println(p11);
+            System.out.println(p12);
+            System.out.println(p13);
+            System.out.println(p21);
+            System.out.println(p22);
+            System.out.println(p23);
+            System.out.println(p31);
+            System.out.println(p32);
+            System.out.println(p33);
+        }
+        assertEquals(true,isCovered);
     }
 
     @Test
