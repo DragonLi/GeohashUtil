@@ -69,7 +69,7 @@ public class GeoHashSearchUtil {
         return new Pair<>(leftTop.fromPrefix(prefixIndex),rightBottom.fromPrefix(prefixIndex));
     }
 
-    public static List<GeoHash> leastBoundingSlice(final BoundingBox box){
+    public static List<GeoHash> leastBoundingSlice(final BoundingBox box,final int maxLen){
         final double centerLat = (box.minLat + box.maxLat) / 2;
         final double centerLon = (box.minLon + box.maxLon) / 2;
         final double halfX = box.getLongitudeSize() /2;
@@ -78,12 +78,12 @@ public class GeoHashSearchUtil {
         final int ky = (int) (Math.floor((LOG90D - Math.log(halfY))/LOG2BASE +1));
         final int k;
         if (kx == ky || kx == ky+1){
-            k = kx+ky;
+            k = Math.min(maxLen,kx+ky);
         }else if (kx < ky){
-            k = kx*2;
+            k = Math.min(maxLen,kx*2);
         }else {
             // kx > ky +1
-            k = ky*2+1;
+            k = Math.min(maxLen,ky*2+1);
         }
         GeoHash lbg = GeoHash.withBitPrecision(centerLat-halfY,centerLon-halfX,k);
         GeoHash rtg = GeoHash.withBitPrecision(centerLat+halfY,centerLon+halfX,k);
@@ -110,8 +110,8 @@ public class GeoHashSearchUtil {
         return result;
     }
 
-    public static List<GeoHash> leastBoundingSliceMerged(final BoundingBox box){
-        return mergeSlices(leastBoundingSlice(box));
+    public static List<GeoHash> leastBoundingSliceMerged(final BoundingBox box,final int maxLen){
+        return mergeSlices(leastBoundingSlice(box,maxLen));
     }
 
     private static List<GeoHash> mergeSlices(List<GeoHash> slices){

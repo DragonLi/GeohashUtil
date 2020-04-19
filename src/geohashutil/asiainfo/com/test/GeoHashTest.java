@@ -59,7 +59,7 @@ public class GeoHashTest {
         double eff = 0;
         for (int i = 0; i < 10000; i++) {
             BoundingBox box = prepareBoundingBox();
-            List<GeoHash> slices = GeoHashSearchUtil.leastBoundingSliceMerged(box);
+            List<GeoHash> slices = GeoHashSearchUtil.leastBoundingSliceMerged(box,36);
             double total = 0;
             for (GeoHash slice : slices) {
                 BoundingBox boundingBox = slice.boundingBox;
@@ -73,7 +73,7 @@ public class GeoHashTest {
     @Test
     public void testLeastBoundingSlice(){
         BoundingBox box = prepareBoundingBox();
-        List<GeoHash> slices = GeoHashSearchUtil.leastBoundingSlice(box);
+        List<GeoHash> slices = GeoHashSearchUtil.leastBoundingSlice(box,36);
         testSliceCoverBox(box, slices);
         GeoHash p = slices.get(0);
         final byte len = p.significantBits;
@@ -83,13 +83,13 @@ public class GeoHashTest {
         final double height = box.getLatitudeSize();
         assertTrue((180 / Math.pow(2, ky)) >= height / 2);
         assertTrue((360 / Math.pow(2, kx)) >= width / 2);
-        assertTrue((180 / Math.pow(2, ky + 1)) < height / 2 || (360 / Math.pow(2, kx + 1)) < width / 2);
+        assertTrue((180 / Math.pow(2, ky + 1)) < height / 2 || (360 / Math.pow(2, kx + 1)) < width / 2 || len == 36);
     }
 
     @Test
     public void testLeastBoundingSliceMerged(){
         BoundingBox box = prepareBoundingBox();
-        List<GeoHash> slices = GeoHashSearchUtil.leastBoundingSliceMerged(box);
+        List<GeoHash> slices = GeoHashSearchUtil.leastBoundingSliceMerged(box,36);
         testSliceCoverBox(box, slices);
         int size = slices.size();
         assertTrue(size <= 6);
