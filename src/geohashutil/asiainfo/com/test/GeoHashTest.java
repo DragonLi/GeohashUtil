@@ -59,14 +59,15 @@ public class GeoHashTest {
         BoundingBox box = prepareBoundingBox();
         List<GeoHash> slices = GeoHashSearchUtil.leastBoundingSlice(box);
         testSliceCoverBox(box, slices);
-        /*
         GeoHash p = slices.get(0);
-        byte len = p.significantBits;
-        int k = len / 2;
-        double width = box.getLongitudeSize();
-        double height = box.getLatitudeSize();
-        assertTrue((180 / Math.pow(2, k + 1)) < height / 2 || (360 / Math.pow(2, k + 1)) < width / 2);
-        */
+        final byte len = p.significantBits;
+        final int ky = len / 2;
+        final int kx = len - ky;
+        final double width = box.getLongitudeSize();
+        final double height = box.getLatitudeSize();
+        assertTrue((180 / Math.pow(2, ky)) >= height / 2);
+        assertTrue((360 / Math.pow(2, kx)) >= width / 2);
+        assertTrue((180 / Math.pow(2, ky + 1)) < height / 2 || (360 / Math.pow(2, kx + 1)) < width / 2);
     }
 
     @Test
@@ -94,7 +95,7 @@ public class GeoHashTest {
         testSliceCoverCorner(box, slices, upperRight);
         WGS84Point lowerLeft = box.getLowerLeft();
         testSliceCoverCorner(box, slices, lowerLeft);
-        assertTrue(slices.size() <= 9);
+        assertTrue(slices.size() <= 16);
     }
 
     private void testSliceCoverCorner(BoundingBox box, List<GeoHash> slices, WGS84Point lowerRight) {
@@ -105,13 +106,14 @@ public class GeoHashTest {
                 break;
             }
         }
-        if (!isCovered) {
-            System.out.println(box);
-            for (GeoHash geoHash : slices) {
-                System.out.println(geoHash);
-            }
-        }
         assertTrue( isCovered);
+    }
+
+    private void debugSliceBox(BoundingBox box, List<GeoHash> slices) {
+        System.out.println(box);
+        for (GeoHash geoHash : slices) {
+            System.out.println(geoHash);
+        }
     }
 
     @Test

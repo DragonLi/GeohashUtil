@@ -10,6 +10,7 @@ public class GeoHashSearchUtil {
     private static final byte[] maskPosIndex;
     public static final double LOG2BASE = Math.log(2);
     public static final double LOG180D = Math.log(180);
+    public static final double LOG90D = Math.log(90);
 
     static {
         maskPosIndex = new byte[256];
@@ -71,34 +72,37 @@ public class GeoHashSearchUtil {
     public static List<GeoHash> leastBoundingSlice(final BoundingBox box){
         final double centerLat = (box.minLat + box.maxLat) / 2;
         final double centerLon = (box.minLon + box.maxLon) / 2;
-        final double width = box.getLongitudeSize();
-        final double height = box.getLatitudeSize();
-        final double halfX = width/2;
-        final double halfY = height/2;
-        final double tx = (LOG180D - Math.log(halfX))/LOG2BASE;
-        final int kx = (int) (Math.floor(tx));
-        final double ty = (LOG180D - Math.log(halfY))/LOG2BASE;
-        final int ky = (int) (Math.floor(ty));
-        final int k = Math.min(kx,ky) *2;
+        final double halfX = box.getLongitudeSize() /2;
+        final double halfY = box.getLatitudeSize() /2;
+        final int kx = (int) (Math.floor((LOG180D - Math.log(halfX))/LOG2BASE +1));
+        final int ky = (int) (Math.floor((LOG90D - Math.log(halfY))/LOG2BASE +1));
+        final int k;
+        if (kx == ky || kx == ky+1){
+            k = kx+ky;
+        }else if (kx < ky){
+            k = kx*2;
+        }else {
+            // kx > ky +1
+            k = ky*2+1;
+        }
         GeoHash lbg = GeoHash.withBitPrecision(centerLat-halfY,centerLon-halfX,k);
         GeoHash rtg = GeoHash.withBitPrecision(centerLat+halfY,centerLon+halfX,k);
-        List<GeoHash> result = new ArrayList<>(9);
-        final long startX = lbg.lonBits;
-        final long startY = lbg.latBits;
-        final long endX = rtg.lonBits;
-        final long endY = rtg.latBits;
+        int N = (int) (rtg.lonBits - lbg.lonBits + 1);
+        int M = (int) (rtg.latBits - lbg.latBits + 1);
+        int cap = N * M;
+        List<GeoHash> result = new ArrayList<>(cap);
         GeoHash curX = lbg;
-        for (long x = startX; x <=endX ; ++x) {
+        for (int x = 0; x < N ; ++x) {
             GeoHash curY = curX;
-            if (x < endX)
+            if (x < N -1)
                 curX = curX.getEasternNeighbour();
-            for (long y = startY; y <= endY; ++y) {
-                if (x == endX && y == endY){
+            for (int y = 0; y < M; ++y) {
+                if (x == N -1 && y == M -1){
                     result.add(rtg);
                 }else {
                     result.add(curY);
                 }
-                if (y < endY)
+                if (y < M -1)
                     curY = curY.getNorthernNeighbour();
             }
         }
@@ -114,12 +118,35 @@ public class GeoHashSearchUtil {
         final GeoHash rtg = slices.get(slices.size()-1);
         final long maxY = rtg.latBits;
         final long minY = lbg.latBits;
-        if (maxY - minY == 1){
-            if ((maxY ^ minY) == 1){
-                //merge along y-axis
+        final long minX = lbg.lonBits;
+        final long maxX =rtg.lonBits;
+        //matrix: (maxX - minX+1) * (maxY - minY+1)
+        int N = (int) (maxX - minX + 1);
+        int M = (int) (maxY - minY + 1);
+        int count = 0;
+        GeoHash[][] tmp = new GeoHash[N][];
+        for (int i = 0; i < N; i++) {
+            GeoHash[] cur = new GeoHash[M];
+            tmp[i] = cur;
+            for (int j = 0; j < M; j++) {
+                cur[j] = slices.get(count);
+                ++count;
+                if (j>0 && cur[j-1].significantBits == cur[j].significantBits
+                        && cur[j].significantBits%2 ==0){
+                    long diff = cur[j-1].latBits ^ cur[j].latBits;
+                    if (diff == 1){
+                        GeoHash merged = cur[j].dropSignificantBits(1);
+                        cur[j-1] = cur[j] = merged;
+                        if (i>0 && tmp[i-1][j-1].significantBits == cur[j-1].significantBits){
+                            diff = tmp[i-1][j-1].lonBits ^ cur[j-1].lonBits;
+                            if (diff == 1){
+                                merged = cur[j-1].dropSignificantBits(1);
+
+                            }
+                        }
+                    }
+                }
             }
-        }else if (maxY - minY == 2){
-            //test 2 combination
         }
         return slices;
     }
