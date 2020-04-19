@@ -10,7 +10,7 @@ public class GeoHashSearchUtil {
     private static final byte[] maskPosIndex;
     public static final double LOG2BASE = Math.log(2);
     public static final double LOG180D = Math.log(180);
-    public static final double LOG90D = Math.log(90);
+    public static final double LOG360D = Math.log(360);
 
     static {
         maskPosIndex = new byte[256];
@@ -74,8 +74,8 @@ public class GeoHashSearchUtil {
         final double centerLon = (box.minLon + box.maxLon) / 2;
         final double halfX = box.getLongitudeSize() /2;
         final double halfY = box.getLatitudeSize() /2;
-        final int kx = (int) (Math.floor((LOG180D - Math.log(halfX))/LOG2BASE +1));
-        final int ky = (int) (Math.floor((LOG90D - Math.log(halfY))/LOG2BASE +1));
+        final int kx = (int) (Math.floor((LOG360D - Math.log(halfX))/LOG2BASE));
+        final int ky = (int) (Math.floor((LOG180D - Math.log(halfY))/LOG2BASE));
         final int k;
         if (kx == ky || kx == ky+1){
             k = Math.min(maxLen,kx+ky);
