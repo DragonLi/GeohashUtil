@@ -184,9 +184,9 @@ public class GeoHashSearchUtil {
             }
         }
         List<GeoHash> mergedSlices = removeDuplicates(tmp,slices.size() - mergedCount);
-        if (mergedSlices.size() + mergedCount != slices.size()){
-            throw new RuntimeException();
-        }
+//        if (mergedSlices.size() + mergedCount != slices.size()){
+//            throw new RuntimeException("bug");
+//        }
         return mergedSlices;
     }
 

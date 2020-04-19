@@ -59,7 +59,7 @@ public class GeoHashTest {
         double eff = 0;
         for (int i = 0; i < 10000; i++) {
             BoundingBox box = prepareBoundingBox();
-            List<GeoHash> slices = GeoHashSearchUtil.leastBoundingSlice(box);
+            List<GeoHash> slices = GeoHashSearchUtil.leastBoundingSliceMerged(box);
             double total = 0;
             for (GeoHash slice : slices) {
                 BoundingBox boundingBox = slice.boundingBox;
