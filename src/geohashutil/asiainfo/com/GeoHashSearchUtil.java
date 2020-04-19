@@ -87,6 +87,7 @@ public class GeoHashSearchUtil {
         }
         GeoHash lbg = GeoHash.withBitPrecision(centerLat-halfY,centerLon-halfX,k);
         GeoHash rtg = GeoHash.withBitPrecision(centerLat+halfY,centerLon+halfX,k);
+        //matrix: (maxX - minX+1) * (maxY - minY+1)
         int N = (int) (rtg.lonBits - lbg.lonBits + 1);
         int M = (int) (rtg.latBits - lbg.latBits + 1);
         int cap = N * M;
@@ -120,35 +121,92 @@ public class GeoHashSearchUtil {
         final long minY = lbg.latBits;
         final long minX = lbg.lonBits;
         final long maxX =rtg.lonBits;
-        //matrix: (maxX - minX+1) * (maxY - minY+1)
-        int N = (int) (maxX - minX + 1);
-        int M = (int) (maxY - minY + 1);
-        int count = 0;
-        GeoHash[][] tmp = new GeoHash[N][];
-        for (int i = 0; i < N; i++) {
-            GeoHash[] cur = new GeoHash[M];
-            tmp[i] = cur;
-            for (int j = 0; j < M; j++) {
-                cur[j] = slices.get(count);
-                ++count;
-                if (j>0 && cur[j-1].significantBits == cur[j].significantBits
-                        && cur[j].significantBits%2 ==0){
-                    long diff = cur[j-1].latBits ^ cur[j].latBits;
-                    if (diff == 1){
-                        GeoHash merged = cur[j].dropSignificantBits(1);
-                        cur[j-1] = cur[j] = merged;
-                        if (i>0 && tmp[i-1][j-1].significantBits == cur[j-1].significantBits){
-                            diff = tmp[i-1][j-1].lonBits ^ cur[j-1].lonBits;
-                            if (diff == 1){
-                                merged = cur[j-1].dropSignificantBits(1);
+        final int N = (int) (maxX - minX + 1);
+        final int M = (int) (maxY - minY + 1);
+        final boolean isEvenLen = lbg.significantBits % 2 == 0;
 
-                            }
+        int mergedCount = 0;
+        //matrix: (maxX - minX+1) * (maxY - minY+1)
+        GeoHash[][] tmp;
+        if (isEvenLen){
+            tmp = new GeoHash[M][];
+            for (int y = 0; y < M; ++y) {
+                GeoHash[] row = new GeoHash[N];
+                tmp[y] = row;
+                for (int x = 0,count=y; x < N; ++x,count+=M) {
+                    row[x] = slices.get(count);//count == x*M+y
+                }
+            }
+            for (int y = 1; y < M; y++) {
+                GeoHash[] row = tmp[y];
+                GeoHash[] underRow = tmp[y - 1];
+                for (int x = 0; x < N; ++x) {
+                    //check merged along y-axis when geohash length is even
+                    if (canMergedAlongYAxis(underRow[x],row[x])){
+                        underRow[x]=row[x]=row[x].dropSignificantBits(1);
+                        ++mergedCount;
+                        //check merged along x-axis when y-axis is merged
+                        if (x>0 && canMergedAlongXAxis(row[x-1],row[x])){
+                            GeoHash merged = row[x].dropSignificantBits(1);
+                            row[x-1]=row[x]=merged;
+                            underRow[x-1]= underRow[x]=merged;
+                            ++mergedCount;
+                        }
+                    }
+                }
+            }
+        }else{
+            tmp = new GeoHash[N][];
+            for (int x = 0,count=0; x < N; ++x) {
+                GeoHash[] col = new GeoHash[M];
+                tmp[x] = col;
+                for (int y = 0; y < M; ++y,++count) {
+                    col[y] = slices.get(count);
+                }
+            }
+            for (int x = 1; x < N; ++x) {
+                GeoHash[] col = tmp[x];
+                GeoHash[] leftCol = tmp[x-1];
+                for (int y = 0; y < M; ++y) {
+                    //check merged along x-axis when geohash length is odd
+                    if (canMergedAlongXAxis(leftCol[y],col[y])){
+                        leftCol[y]=col[y]=col[y].dropSignificantBits(1);
+                        ++mergedCount;
+                        //check merged along y-axis when x-axis is merged
+                        if (y>0 && canMergedAlongYAxis(col[y-1],col[y])){
+                            GeoHash merged = col[y].dropSignificantBits(1);
+                            col[y-1]=col[y]=merged;
+                            leftCol[y-1]= leftCol[y]=merged;
+                            ++mergedCount;
                         }
                     }
                 }
             }
         }
-        return slices;
+        List<GeoHash> mergedSlices = removeDuplicates(tmp,slices.size() - mergedCount);
+        if (mergedSlices.size() + mergedCount != slices.size()){
+            throw new RuntimeException();
+        }
+        return mergedSlices;
     }
 
+    private static List<GeoHash> removeDuplicates(GeoHash[][] tmp, int cap) {
+        List<GeoHash> result = new ArrayList<>(cap);
+        for (GeoHash[] r : tmp) {
+            for (GeoHash item : r) {
+                if (!result.contains(item)){
+                    result.add(item);
+                }
+            }
+        }
+        return result;
+    }
+
+    private static boolean canMergedAlongXAxis(GeoHash a, GeoHash b){
+        return a.significantBits == b.significantBits && (a.lonBits ^ b.lonBits) == 1;
+    }
+
+    private static boolean canMergedAlongYAxis(GeoHash a, GeoHash b){
+        return a.significantBits == b.significantBits && (a.latBits ^ b.latBits) == 1;
+    }
 }

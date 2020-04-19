@@ -55,6 +55,22 @@ public class GeoHashTest {
     }
 
     @Test
+    public void testLeastBoundingSliceEff(){
+        double eff = 0;
+        for (int i = 0; i < 10000; i++) {
+            BoundingBox box = prepareBoundingBox();
+            List<GeoHash> slices = GeoHashSearchUtil.leastBoundingSlice(box);
+            double total = 0;
+            for (GeoHash slice : slices) {
+                BoundingBox boundingBox = slice.boundingBox;
+                total += boundingBox.getLatitudeSize()* boundingBox.getLongitudeSize();
+            }
+            eff += box.getLatitudeSize()*box.getLongitudeSize()/total;
+        }
+        System.out.println(eff/10000);
+    }
+
+    @Test
     public void testLeastBoundingSlice(){
         BoundingBox box = prepareBoundingBox();
         List<GeoHash> slices = GeoHashSearchUtil.leastBoundingSlice(box);
@@ -75,6 +91,14 @@ public class GeoHashTest {
         BoundingBox box = prepareBoundingBox();
         List<GeoHash> slices = GeoHashSearchUtil.leastBoundingSliceMerged(box);
         testSliceCoverBox(box, slices);
+        int size = slices.size();
+        assertTrue(size <= 6);
+        for (int i = 0; i < size; i++) {
+            GeoHash item = slices.get(i);
+            for (int j = i+1; j < size; j++) {
+                assertTrue(!item.equals(slices.get(j)));
+            }
+        }
     }
 
     private BoundingBox prepareBoundingBox(){
@@ -95,7 +119,7 @@ public class GeoHashTest {
         testSliceCoverCorner(box, slices, upperRight);
         WGS84Point lowerLeft = box.getLowerLeft();
         testSliceCoverCorner(box, slices, lowerLeft);
-        assertTrue(slices.size() <= 16);
+        assertTrue(slices.size() <= 9);
     }
 
     private void testSliceCoverCorner(BoundingBox box, List<GeoHash> slices, WGS84Point lowerRight) {
