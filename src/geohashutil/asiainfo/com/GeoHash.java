@@ -408,6 +408,10 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
         return result;
     }
 
+    public String toBinaryStringOnlySignificantBits(){
+        return Long.toBinaryString(bits>>significantBits);
+    }
+
     @Override
     public String toString() {
         if (significantBits % 5 == 0) {
