@@ -7,11 +7,12 @@ import java.util.List;
 
 public class GeoHashSearchUtil {
     private static final int MAX_LEVEL = 40;//40位GeoHash精度约为20米
-    private static final byte[] maskPosIndex;
+//    private static final byte[] maskPosIndex;
     public static final double LOG2BASE = Math.log(2);
     public static final double LOG180D = Math.log(180);
     public static final double LOG360D = Math.log(360);
 
+    /*
     static {
         maskPosIndex = new byte[256];
         byte c = 0;//最右面的位置是0
@@ -20,14 +21,17 @@ public class GeoHashSearchUtil {
             if (i == carrier)//到达更高一个bit的位置，相当于进位了
             {
                 ++c;//到达进位位置，最高的1向左移动一位，因此加一
-                carrier += carrier;
+                carrier <<=1;
             }
             maskPosIndex[i]=c;
         }
     }
+    */
 
     public static byte comparePrefix(long a, long b){
         long c = a ^ b;
+        return (byte) (64-Long.numberOfLeadingZeros(c));
+        /*
         byte rShift = 64;
         byte index=64;
         for (int i = 0; i < 8; i++) {
@@ -41,6 +45,7 @@ public class GeoHashSearchUtil {
             }
         }
         return index;
+        */
     }
 
     public static Pair<GeoHash,GeoHash> leastBoundingGeoGrid(BoundingBox box){

@@ -409,7 +409,7 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
     }
 
     public String toBinaryStringOnlySignificantBits(){
-        return Long.toBinaryString(bits>>>significantBits);
+        return Long.toBinaryString(bits>>>(MAX_BIT_PRECISION - significantBits));
     }
 
     @Override
