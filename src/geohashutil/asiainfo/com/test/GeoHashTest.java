@@ -14,6 +14,7 @@ import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
 public class GeoHashTest {
+
     private void assertWithin(GeoHash hash, GeoHash bbox) {
         assertTrue(hash + " should be within " + bbox, hash.within(bbox));
     }
@@ -57,9 +58,12 @@ public class GeoHashTest {
     @Test
     public void testLeastBoundingSliceEff(){
         double eff = 0;
-        for (int i = 0; i < 10000; i++) {
+        int sliceNumAvg = 0;
+        final int testCounts = 100000;
+        for (int i = 0; i < testCounts; i++) {
             BoundingBox box = prepareBoundingBox();
             List<GeoHash> slices = GeoHashSearchUtil.leastBoundingSliceMerged(box,36);
+            sliceNumAvg += slices.size();
             double total = 0;
             for (GeoHash slice : slices) {
                 BoundingBox boundingBox = slice.boundingBox;
@@ -67,7 +71,8 @@ public class GeoHashTest {
             }
             eff += box.getLatitudeSize()*box.getLongitudeSize()/total;
         }
-        System.out.println(eff/10000);
+        System.out.println(eff/ testCounts);
+        System.out.println(sliceNumAvg/(float)testCounts);
     }
 
     @Test
