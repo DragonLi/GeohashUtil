@@ -10,8 +10,8 @@ import org.junit.Test;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import static geohashutil.asiainfo.com.GeoHash.commonPrefixLength;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 public class GeoHashTest {
 
@@ -26,29 +26,28 @@ public class GeoHashTest {
     }
 
     @Test
-    public void testFastGeohash(){
-        final int testCount = 100000;
-        for (int i = 0; i < testCount; i++) {
-            for (int numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
-                double lng=Math.random()*360-180;
-                double lat=Math.random()*180 -90;
-                GeoHash hash = GeoHash.withBitPrecision(lat,lng, numberOfBits);
-                GeoHash test = GeoHash.oldSlowCreate(lat,lng, numberOfBits);
-                boolean ass = test.equals(hash);
-                if (!ass){
-                    System.out.println(lng);
-                    System.out.println(lat);
-                    System.out.println(hash);
-                    System.out.println(test);
-                }
-                assertTrue(ass);
-            }
+    public void testSameNumbersHave64BitsPrefix() {
+        for (long a = 0; a < 120000000; a += 101) {
+            long b = a;
+            assertPrefixLength(64,a,b);
         }
     }
-    //TODO dropSignificantBits
-    //TODO getEasternNeighbour
-    //TODO getNorthernNeighbour...
-    //TODO fixbug:recombineLatLonBitsToHash
+
+    @Test
+    public void testKnownPrefixLenghts() {
+        long a = 0x8f00000000000000l;
+        long b = 0x8000000000000000l;
+        long c = 0x8800000000000000l;
+        assertPrefixLength(4, a, b);
+        assertPrefixLength(4, b, c);
+        assertPrefixLength(5, a, c);
+        assertPrefixLength(0, 0x0, a);
+        assertPrefixLength(16, 0x8888300000000000l, 0x8888c00000000000l);
+    }
+
+    private void assertPrefixLength(int length, long a, long b) {
+        assertEquals(length, commonPrefixLength(a, b));
+    }
 
     @Test
     public void testFromPrefix(){
@@ -78,6 +77,27 @@ public class GeoHashTest {
         System.out.println(Long.toBinaryString(prefix.bits));
         assertEquals(index,64-"11100100111110111101101110".length());
         assertEquals(Long.toBinaryString(prefix.bits),"1110010011111011110110111000000000000000000000000000000000000000");
+    }
+
+    @Test
+    public void testFastGeohash(){
+        final int testCount = 100000;
+        for (int i = 0; i < testCount; i++) {
+            for (int numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
+                double lng=Math.random()*360-180;
+                double lat=Math.random()*180 -90;
+                GeoHash test = GeoHash.oldSlowCreate(lat,lng, numberOfBits);
+                GeoHash hash = GeoHash.withBitPrecision(lat,lng, numberOfBits);
+                boolean ass = test.equals(hash);
+                if (!ass){
+                    System.out.println(lng);
+                    System.out.println(lat);
+                    System.out.println(hash);
+                    System.out.println(test);
+                }
+                assertTrue(ass);
+            }
+        }
     }
 
     @Test
