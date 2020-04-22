@@ -16,6 +16,9 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
             'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
     private final static Map<Character, Integer> decodeMap = new HashMap<>();
+    public static final double D180 = 180;
+    private static final double D360 = 360;
+    public static final double D90 = 90;
 
     static {
         int sz = base32.length;
@@ -39,7 +42,7 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
     public final long lonBits;
 
     private String base32Encoding;
-//end cache
+    //end cache
 
     public GeoHash dropSignificantBits(int k) {
         if (k >= significantBits)
@@ -78,13 +81,17 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
         return this.getGridPoint().distanceFrom(geoHash.getGridPoint());
     }
 
+    /*private GeoHash(final double latitude, final double longitude, int desiredPrecision,boolean test) {
+
+    }*/
+
     private GeoHash(final double latitude, final double longitude, int desiredPrecision) {
         desiredPrecision = Math.min(desiredPrecision, MAX_BIT_PRECISION);
         long bits = 0;
         byte significantBits = 0;
         boolean isEvenBit = true;
-        double latMin = -90, latMax = 90;
-        double lonMin = -180, lonMax = 180;
+        double latMin = -D90, latMax = D90;
+        double lonMin = -D180, lonMax = D180;
         double mid;
         long latBits = 0, lonBits = 0;
 
@@ -161,8 +168,8 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
             , final byte significantBits) {
         long bits = 0;
         boolean isEvenBit = false;
-        double latMin = -90, latMax = 90;
-        double lonMin = -180, lonMax = 180;
+        double latMin = -D90, latMax = D90;
+        double lonMin = -D180, lonMax = D180;
         double mid;
 
         long latBitMask = 1 << (significantBits / 2);
@@ -281,21 +288,55 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
             return Integer.compare(significantBits, o.significantBits);
         }
     }
-    public static GeoHash recombineLatLonBits(final long latBits,final long lngBits, final int numberOfBits){
-        if (numberOfBits > MAX_BIT_PRECISION || numberOfBits <=0) {
-            throw new IllegalArgumentException("A Geohash can only be " + MAX_BIT_PRECISION + " bits long!");
-        }
-        return recombineLatLonBitsToHash(latBits,lngBits, (byte) (MAX_BIT_PRECISION-numberOfBits));
-    }
 
     public static GeoHash withBitPrecision(final double latitude, final double longitude, int numberOfBits) {
-        if (numberOfBits > MAX_BIT_PRECISION) {
+        CheckLatLng(latitude, longitude, numberOfBits);
+        return new GeoHash(latitude, longitude, numberOfBits);
+    }
+
+    public static GeoHash fastCreate(double latitude, double longitude, int numberOfBits) {
+        CheckLatLng(latitude, longitude, numberOfBits);
+        int lenY=numberOfBits>>>1;//numberOfBits/2
+        int lenX=numberOfBits-lenY;
+        double latDelta = fastDoubleDecPow2(lenY, D180);// == 180/ Math.pow(2, lenY);
+        double lngDelta = fastDoubleDecPow2(lenX, D360);// == 360/ Math.pow(2, lenX);
+        long latBits = (long) Math.floor((latitude+ D90)/latDelta);
+        long lngBits = (long) Math.floor((longitude+ D180)/lngDelta);
+        double minLat = latBits * latDelta - D90;
+        double maxLat = minLat + latDelta;
+        double minLng = lngBits * lngDelta - D180;
+        double maxLng = minLng + lngDelta;
+        int times = (lenX+3) /4;
+
+        return recombineLatLonBitsToHash(latBits, lngBits, (byte) numberOfBits);
+    }
+
+    private static double fastDoubleDecPow2(long exp, double tmp) {
+        long latRaw = Double.doubleToRawLongBits(tmp);
+        latRaw -= exp <<52;
+        return Double.longBitsToDouble(latRaw);
+    }
+
+    /**
+     * fast pow2 using mantissa format of doulbe
+     * @param exp
+     * @param tmp
+     * @return tmp * Math.pow(2,exp)
+     */
+    private static double fastDoublePow2(long exp, double tmp) {
+        long raw = Double.doubleToRawLongBits(tmp);
+        raw += exp <<52;
+        return Double.longBitsToDouble(raw);
+    }
+//TODO compare eff public static GeoHash fastCreate2(double latitude, double longitude, int numberOfBits) {
+
+    private static void CheckLatLng(double latitude, double longitude, int numberOfBits) {
+        if (numberOfBits > MAX_BIT_PRECISION || numberOfBits <0) {
             throw new IllegalArgumentException("A Geohash can only be " + MAX_BIT_PRECISION + " bits long!");
         }
         if (Math.abs(latitude) > 90.0 || Math.abs(longitude) > 180.0) {
             throw new IllegalArgumentException("Can't have lat/lon values out of (-90,90)/(-180/180)");
         }
-        return new GeoHash(latitude, longitude, numberOfBits);
     }
 
     /**
@@ -312,8 +353,8 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
     }
 
     public static GeoHash fromLongValue(final long bits, final byte significantBits) {
-        double latMin = -90, latMax = 90;
-        double lonMin = -180, lonMax = 180;
+        double latMin = -D90, latMax = D90;
+        double lonMin = -D180, lonMax = D180;
         double mid;
         boolean isEvenBit = true;
         long latBits = 0, lonBits = 0;
@@ -354,8 +395,8 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
      * also be used with functions like within().
      */
     public static GeoHash fromGeohashString(String geohash) {
-        double latMin = -90, latMax = 90;
-        double lonMin = -180, lonMax = 180;
+        double latMin = -D90, latMax = D90;
+        double lonMin = -D180, lonMax = D180;
         double mid;
         boolean isEvenBit = true;
         long latBits = 0, lonBits = 0;
