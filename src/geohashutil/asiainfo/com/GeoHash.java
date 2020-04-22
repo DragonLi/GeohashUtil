@@ -377,6 +377,7 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
         return withBitPrecision(latitude, longitude, desiredPrecision);
     }
 
+    //TODO optimized using numberOfLeadingZeros
     public static GeoHash fromLongValue(final long bits, final byte significantBits) {
         double latMin = -D90, latMax = D90;
         double lonMin = -D180, lonMax = D180;
@@ -414,6 +415,7 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
         return new GeoHash(bits, significantBits, latBits, lonBits, latMin, latMax, lonMin, lonMax);
     }
 
+    //TODO optimized using numberOfLeadingZeros
     /**
      * build a new {@link GeoHash} from a base32-encoded {@link String}.<br>
      * This will also set up the hashes bounding box and other values, so it can
