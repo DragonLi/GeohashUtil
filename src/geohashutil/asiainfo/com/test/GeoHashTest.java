@@ -29,13 +29,11 @@ public class GeoHashTest {
     public void testFastGeohash(){
         final int testCount = 100000;
         for (int i = 0; i < testCount; i++) {
-            for (int numberOfBits = 0; numberOfBits <= 60; numberOfBits++) {
+            for (int numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
                 double lng=Math.random()*360-180;
                 double lat=Math.random()*180 -90;
-//                lat=45.25311201810837;lng=63.08122796221025;numberOfBits=52;
-//                lat=33.46924991153311;lng=28.46826743467804;numberOfBits=61;
                 GeoHash hash = GeoHash.withBitPrecision(lat,lng, numberOfBits);
-                GeoHash test = GeoHash.fastCreate(lat,lng, numberOfBits);
+                GeoHash test = GeoHash.oldSlowCreate(lat,lng, numberOfBits);
                 boolean ass = test.equals(hash);
                 if (!ass){
                     System.out.println(lng);
@@ -47,6 +45,10 @@ public class GeoHashTest {
             }
         }
     }
+    //TODO dropSignificantBits
+    //TODO getEasternNeighbour
+    //TODO getNorthernNeighbour...
+    //TODO fixbug:recombineLatLonBitsToHash
 
     @Test
     public void testFromPrefix(){
