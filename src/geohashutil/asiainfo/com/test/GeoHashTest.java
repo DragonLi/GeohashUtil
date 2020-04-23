@@ -81,6 +81,9 @@ public class GeoHashTest {
 
     @Test
     public void testFastGeohash(){
+        //hot the code path
+        GeoHash.withBitPrecision(0,0,1);
+        new GeoHashSlow(0,0, 1);
         final int testCount = 100000;
         final long seed = System.nanoTime();
         java.util.Random r = new java.util.Random(seed);
@@ -102,7 +105,7 @@ public class GeoHashTest {
                 double lng=r.nextDouble()*360-180;
                 double lat=r.nextDouble()*180 -90;
                 long start = System.nanoTime();
-                GeoHash test = GeoHash.oldSlowCreate(lat,lng, numberOfBits);
+                GeoHashSlow test = new GeoHashSlow(lat,lng, numberOfBits);
                 elapsedOld += System.nanoTime() - start;
             }
         }
@@ -113,9 +116,9 @@ public class GeoHashTest {
             for (int numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
                 double lng=Math.random()*360-180;
                 double lat=Math.random()*180 -90;
-                GeoHash test = GeoHash.oldSlowCreate(lat,lng, numberOfBits);
+                GeoHashSlow test = new GeoHashSlow(lat,lng, numberOfBits);
                 GeoHash hash = GeoHash.withBitPrecision(lat,lng, numberOfBits);
-                boolean ass = test.equals(hash);
+                boolean ass = test.testEquals(hash);
                 if (!ass){
                     System.out.println(lng);
                     System.out.println(lat);
