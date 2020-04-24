@@ -9,7 +9,7 @@ public final class GeoHash implements Comparable<GeoHash>{
 
     private static final int[] BITS = {16, 8, 4, 2, 1};
     private static final int BASE32_BITS = 5;
-    public static final long FIRST_BIT_FLAGGED = 0x8000000000000000l;
+    public static final long FIRST_BIT_FLAGGED = 0x8000000000000000L;
     private static final char[] base32 = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'b', 'c', 'd', 'e', 'f',
             'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
@@ -80,7 +80,7 @@ public final class GeoHash implements Comparable<GeoHash>{
         final double maxLat = minLat + latDelta;
         final double minLng = lngBits * lngDelta - D180;
         final double maxLng = minLng + lngDelta;
-        return new GeoHash(bits, (byte) numberOfBits, latBits, lngBits, minLat, maxLat, minLng, maxLng);
+        return new GeoHash(bits, numberOfBits, latBits, lngBits, minLat, maxLat, minLng, maxLng);
     }
 
     public GridPoint getGridPoint(){
@@ -160,8 +160,8 @@ public final class GeoHash implements Comparable<GeoHash>{
         return new GeoHashNavIterator(this);
     }
 
-    public GeoHash navFromSteps(int latitudeStep,int longtitudeStep){
-        return recombineLatLonBitsToHash(latBits + latitudeStep, lonBits+longtitudeStep);
+    public GeoHash navFromSteps(int latitudeStep,int longitudeStep){
+        return recombineLatLonBitsToHash(latBits + latitudeStep, lonBits+longitudeStep);
     }
 
     public GeoHash getNorthernNeighbour() {
@@ -262,13 +262,13 @@ public final class GeoHash implements Comparable<GeoHash>{
         return new GeoHash(bits, (byte) numberOfBits, latBits, lngBits, minLat, maxLat, minLng, maxLng);
     }
 
-    private static long interleavingInsertZero(long lngBits) {
-        long lowestOneBit = lngBits & -lngBits;
+    private static long interleavingInsertZero(long bits) {
+        long lowestOneBit = bits & -bits;
         long result = 0;
         while (lowestOneBit != 0) {
-            lngBits = lngBits ^ lowestOneBit;//remove lowestOneBit
-            result += lowestOneBit * lowestOneBit;//left shift by the number of trailing zero
-            lowestOneBit = lngBits & -lngBits;
+            bits ^= lowestOneBit;//remove lowestOneBit
+            result |= lowestOneBit * lowestOneBit;//left shift by the number of trailing zero
+            lowestOneBit = bits & -bits;
         }
         return result;
     }
@@ -313,42 +313,35 @@ public final class GeoHash implements Comparable<GeoHash>{
         return withBitPrecision(latitude, longitude, desiredPrecision);
     }
 
-    //TODO optimized using numberOfLeadingZeros
     public static GeoHash fromLongValue(final long bits, final byte significantBits) {
-        double latMin = -D90, latMax = D90;
-        double lonMin = -D180, lonMax = D180;
-        double mid;
-        boolean isEvenBit = true;
-        long latBits = 0, lonBits = 0;
-        long bitMask = FIRST_BIT_FLAGGED;
+        final int lenY = significantBits/2;
+        final int lenX = significantBits - lenY;
+        long tmp = lenX == lenY ? bits : bits<<1;
+        long latBits = 0, lngBits = 0;
 
-        for (int j = 0; j < significantBits; j++) {
-            if (isEvenBit) {
-                //lonBits
-                lonBits <<= 1;
-                mid = (lonMin + lonMax) / 2;
-                if ((bits & bitMask) == 0) {
-                    lonMax = mid;
-                } else {
-                    lonMin = mid;
-                    lonBits = lonBits | 0x1;
-                }
-            } else {
-                //latBits
-                latBits <<= 1;
-                mid = (latMin + latMax) / 2;
-                if ((bits & bitMask) == 0) {
-                    latMax = mid;
-                } else {
-                    latMin = mid;
-                    latBits = latBits | 0x1;
-                }
+        final long yAxisBitMask = 0B0101010101010101010101010101010101010101010101010101010101010101L;
+        long lowestOneBit = tmp & -tmp;
+        while (lowestOneBit != 0){
+            int lowestIndex = Long.numberOfTrailingZeros(lowestOneBit);
+            long bitSetIndex = 1L << (lowestIndex>>1);
+            if ((yAxisBitMask & lowestOneBit) != 0){
+                latBits |= bitSetIndex;
+            }else{
+                lngBits |= bitSetIndex;
             }
-            isEvenBit = !isEvenBit;
-            bitMask >>>= 1;
+            tmp ^= lowestOneBit;
+            lowestOneBit = tmp & -tmp;
         }
+        latBits = lenX == lenY ?latBits:latBits>>>1;
 
-        return new GeoHash(bits, significantBits, latBits, lonBits, latMin, latMax, lonMin, lonMax);
+        final double lngDelta = fastDoubleDecPow2(lenX, D360);// == 360/ Math.pow(2, lenX);
+        final double latDelta = lenX == lenY ? lngDelta /2 : lngDelta;//fastDoubleDecPow2(lenY, D180);// == 180/ Math.pow(2, lenY);
+        final double minLat = latBits * latDelta - D90;
+        final double maxLat = minLat + latDelta;
+        final double minLng = lngBits * lngDelta - D180;
+        final double maxLng = minLng + lngDelta;
+
+        return new GeoHash(bits, significantBits, latBits, lngBits, minLat, maxLat, minLng, maxLng);
     }
 
     //TODO optimized using numberOfLeadingZeros

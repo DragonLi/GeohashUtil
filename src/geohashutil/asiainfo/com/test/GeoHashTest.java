@@ -8,6 +8,8 @@ import javafx.util.Pair;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static geohashutil.asiainfo.com.GeoHash.commonPrefixLength;
@@ -34,7 +36,62 @@ public class GeoHashTest {
     }
 
     @Test
+    public void testFromLongFast() {
+        final int testCount = 100000;
+        final long seed = System.nanoTime();
+        java.util.Random r = new java.util.Random(seed);
+        for (int i = 0; i < testCount; i++) {
+            long bits = r.nextLong();
+            for (byte numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
+                GeoHash test = GeoHash.fromLongValue(bits, numberOfBits);
+                GeoHashSlow old = GeoHashSlow.fromLongValue(bits, numberOfBits);
+                boolean ass = old.testEquals(test);
+                if (!ass){
+                    System.out.println(Long.toBinaryString(bits));
+                    System.out.println(old);
+                    System.out.println(test);
+                }
+                assertTrue(ass);
+            }
+        }
+
+        r = new java.util.Random(seed);
+        long elapsedFast = 0;
+        for (int i = 0; i < testCount; i++) {
+            long bits = r.nextLong();
+            for (byte numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
+                long start = System.nanoTime();
+                GeoHash hash = GeoHash.fromLongValue(bits, numberOfBits);
+                elapsedFast += System.nanoTime() - start;
+            }
+        }
+
+        r = new java.util.Random(seed);
+        long elapsedOld = 0;
+        for (int i = 0; i < testCount; i++) {
+            long bits = r.nextLong();
+            for (byte numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
+                long start = System.nanoTime();
+                GeoHashSlow hash = GeoHashSlow.fromLongValue(bits, numberOfBits);
+                elapsedOld += System.nanoTime() - start;
+            }
+        }
+
+        System.out.println(elapsedFast);
+        System.out.println(elapsedOld);
+        double delta = (double)elapsedOld - (double)elapsedFast;
+        System.out.println(delta/(double)elapsedOld);
+    }
+
+    @Test
     public void testKnownPrefixLenghts() {
+        char t = 'a';
+        System.out.println(t);
+        System.out.println((int)t);
+        t='9';
+        System.out.println(t);
+        System.out.println((int)t);
+
         long a = 0x8f00000000000000l;
         long b = 0x8000000000000000l;
         long c = 0x8800000000000000l;
@@ -81,12 +138,28 @@ public class GeoHashTest {
 
     @Test
     public void testFastGeohash(){
-        //hot the code path
-        GeoHash.withBitPrecision(0,0,1);
-        new GeoHashSlow(0,0, 1);
         final int testCount = 100000;
         final long seed = System.nanoTime();
         java.util.Random r = new java.util.Random(seed);
+
+        for (int i = 0; i < testCount; i++) {
+            for (int numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
+                double lng=Math.random()*360-180;
+                double lat=Math.random()*180 -90;
+                GeoHashSlow old = new GeoHashSlow(lat,lng, numberOfBits);
+                GeoHash test = GeoHash.withBitPrecision(lat,lng, numberOfBits);
+                boolean ass = old.testEquals(test);
+                if (!ass){
+                    System.out.println(lng);
+                    System.out.println(lat);
+                    System.out.println(test);
+                    System.out.println(old);
+                }
+                assertTrue(ass);
+            }
+        }
+
+        r = new java.util.Random(seed);
         long elapsedFast = 0;
         for (int i = 0; i < testCount; i++) {
             for (int numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
@@ -109,25 +182,11 @@ public class GeoHashTest {
                 elapsedOld += System.nanoTime() - start;
             }
         }
+
+        System.out.println(elapsedFast);
+        System.out.println(elapsedOld);
         double delta = (double)elapsedOld - (double)elapsedFast;
         System.out.println(delta/(double)elapsedOld);
-
-        for (int i = 0; i < testCount; i++) {
-            for (int numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
-                double lng=Math.random()*360-180;
-                double lat=Math.random()*180 -90;
-                GeoHashSlow test = new GeoHashSlow(lat,lng, numberOfBits);
-                GeoHash hash = GeoHash.withBitPrecision(lat,lng, numberOfBits);
-                boolean ass = test.testEquals(hash);
-                if (!ass){
-                    System.out.println(lng);
-                    System.out.println(lat);
-                    System.out.println(hash);
-                    System.out.println(test);
-                }
-                assertTrue(ass);
-            }
-        }
     }
 
     @Test
