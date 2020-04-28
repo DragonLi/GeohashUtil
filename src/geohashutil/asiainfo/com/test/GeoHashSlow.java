@@ -4,6 +4,7 @@ import geohashutil.asiainfo.com.BoundingBox;
 import geohashutil.asiainfo.com.GeoHash;
 
 public class GeoHashSlow {
+    private static final double D360 = 360;
     private static final double D180 = 180;
     private static final double D90 = 90;
     private static final int MAX_BIT_PRECISION = 64;
@@ -18,6 +19,64 @@ public class GeoHashSlow {
 
     public boolean testEquals(GeoHash other) {
         return other.significantBits == significantBits && other.bits == bits;
+    }
+
+    private static long interleavingInsertZero(long bits) {
+        long lowestOneBit = bits & -bits;
+        long result = 0;
+        while (lowestOneBit != 0) {
+            bits ^= lowestOneBit;//remove lowestOneBit
+            result |= lowestOneBit * lowestOneBit;//left shift by the number of trailing zero
+            lowestOneBit = bits & -bits;
+        }
+        return result;
+    }
+
+    private static void CheckLatLng(double latitude, double longitude, int numberOfBits) {
+        if (numberOfBits > MAX_BIT_PRECISION || numberOfBits <0) {
+            throw new IllegalArgumentException("A Geohash can only be " + MAX_BIT_PRECISION + " bits long!");
+        }
+        if (Math.abs(latitude) > 90.0 || Math.abs(longitude) > 180.0) {
+            throw new IllegalArgumentException("Can't have lat/lon values out of (-90,90)/(-180/180)");
+        }
+    }
+
+    /**
+     * fast pow2 using mantissa format of doulbe
+     * @param exp
+     * @param tmp
+     * @return tmp * Math.pow(2,exp)
+     */
+    private static double fastDoublePow2(long exp, double tmp) {
+        long raw = Double.doubleToRawLongBits(tmp);
+        raw += exp <<52;
+        return Double.longBitsToDouble(raw);
+    }
+
+    private static double fastDoubleDecPow2(long exp, double tmp) {
+        long latRaw = Double.doubleToRawLongBits(tmp);
+        latRaw -= exp <<52;
+        return Double.longBitsToDouble(latRaw);
+    }
+
+    public static GeoHashSlow withBitPrecision(final double latitude, final double longitude, final int numberOfBits) {
+        CheckLatLng(latitude, longitude, numberOfBits);
+        final int lenY=numberOfBits>>>1;//numberOfBits/2
+        final int lenX=numberOfBits-lenY;
+        final double lngDelta = fastDoubleDecPow2(lenX, D360);// == 360/ Math.pow(2, lenX);
+        final double latDelta = lenX == lenY ? lngDelta /2 : lngDelta;//fastDoubleDecPow2(lenY, D180);// == 180/ Math.pow(2, lenY);
+        final long latBits = (long) Math.floor((latitude+ D90)/latDelta);
+        final long lngBits = (long) Math.floor((longitude+ D180)/lngDelta);
+        final double minLat = latBits * latDelta - D90;
+        final double maxLat = minLat + latDelta;
+        final double minLng = lngBits * lngDelta - D180;
+        final double maxLng = minLng + lngDelta;
+
+        long lngInterleavingBits = interleavingInsertZero(lngBits);
+        long latInterleavingBits = interleavingInsertZero(lenX == lenY ? latBits : latBits<<1);
+        long bits = (lngInterleavingBits<<1) ^ latInterleavingBits;
+        bits = bits << (MAX_BIT_PRECISION - (lenX<<1));
+        return new GeoHashSlow(bits, (byte) numberOfBits, latBits, lngBits, minLat, maxLat, minLng, maxLng);
     }
 
     public static GeoHashSlow fromLongValue(final long bits, final byte significantBits) {

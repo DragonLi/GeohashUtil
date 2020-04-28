@@ -146,7 +146,7 @@ public class GeoHashTest {
             for (int numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
                 double lng=Math.random()*360-180;
                 double lat=Math.random()*180 -90;
-                GeoHashSlow old = new GeoHashSlow(lat,lng, numberOfBits);
+                GeoHashSlow old = GeoHashSlow.withBitPrecision(lat,lng, numberOfBits);
                 GeoHash test = GeoHash.withBitPrecision(lat,lng, numberOfBits);
                 boolean ass = old.testEquals(test);
                 if (!ass){
@@ -156,6 +156,18 @@ public class GeoHashTest {
                     System.out.println(old);
                 }
                 assertTrue(ass);
+            }
+        }
+
+        r = new java.util.Random(seed);
+        long elapsedOld = 0;
+        for (int i = 0; i < testCount; i++) {
+            for (int numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
+                double lng=r.nextDouble()*360-180;
+                double lat=r.nextDouble()*180 -90;
+                long start = System.nanoTime();
+                GeoHashSlow test = GeoHashSlow.withBitPrecision(lat,lng, numberOfBits);
+                elapsedOld += System.nanoTime() - start;
             }
         }
 
@@ -171,20 +183,8 @@ public class GeoHashTest {
             }
         }
 
-        r = new java.util.Random(seed);
-        long elapsedOld = 0;
-        for (int i = 0; i < testCount; i++) {
-            for (int numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
-                double lng=r.nextDouble()*360-180;
-                double lat=r.nextDouble()*180 -90;
-                long start = System.nanoTime();
-                GeoHashSlow test = new GeoHashSlow(lat,lng, numberOfBits);
-                elapsedOld += System.nanoTime() - start;
-            }
-        }
-
-        System.out.println(elapsedFast);
-        System.out.println(elapsedOld);
+        System.out.println("elapsedFast: "+elapsedFast);
+        System.out.println("elapsedOld: "+elapsedOld);
         double delta = (double)elapsedOld - (double)elapsedFast;
         System.out.println(delta/(double)elapsedOld);
     }

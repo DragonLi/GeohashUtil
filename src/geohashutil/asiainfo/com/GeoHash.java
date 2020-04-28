@@ -17,11 +17,17 @@ public final class GeoHash implements Comparable<GeoHash>{
     private static final double D180 = 180;
     private static final double D360 = 360;
     private static final double D90 = 90;
+    private static final double[] deltaCached;
 
     static {
         int sz = base32.length;
         for (int i = 0; i < sz; i++) {
             decodeMap.put(base32[i], i);
+        }
+        deltaCached = new double[64];
+        double tmp = D360;
+        for (int i = 0; i < 64; i++) {
+            deltaCached[i] = tmp = tmp/2.0d;
         }
     }
 
@@ -53,7 +59,7 @@ public final class GeoHash implements Comparable<GeoHash>{
         long bits = this.bits & tmp;
         int lenY = numberOfBits / 2;
         int lenX = numberOfBits - lenY;
-        final double lngDelta = fastDoubleDecPow2(lenX, D360);// == 360/ Math.pow(2, lenX);
+        final double lngDelta = lenX==0? D360 : deltaCached[lenX-1];// == 360/ Math.pow(2, lenX);
         final double latDelta = lenX == lenY ? lngDelta /2 : lngDelta;//fastDoubleDecPow2(lenY, D180);// == 180/ Math.pow(2, lenY);
         final long latBits = this.latBits >>> (this.getNumLatBits()-lenY);
         final long lngBits = this.lonBits >>> (this.getNumLonBits()-lenX);
@@ -72,7 +78,7 @@ public final class GeoHash implements Comparable<GeoHash>{
         long bits = this.bits & tmp;
         int lenY = numberOfBits / 2;
         int lenX = numberOfBits - lenY;
-        final double lngDelta = fastDoubleDecPow2(lenX, D360);// == 360/ Math.pow(2, lenX);
+        final double lngDelta = lenX==0? D360 : deltaCached[lenX-1];// == 360/ Math.pow(2, lenX);
         final double latDelta = lenX == lenY ? lngDelta /2 : lngDelta;//fastDoubleDecPow2(lenY, D180);// == 180/ Math.pow(2, lenY);
         final long latBits = this.latBits >>> (this.getNumLatBits()-lenY);
         final long lngBits = this.lonBits >>> (this.getNumLonBits()-lenX);
@@ -141,7 +147,7 @@ public final class GeoHash implements Comparable<GeoHash>{
             , final byte numberOfBits) {
         final int lenY=numberOfBits>>>1;//numberOfBits/2
         final int lenX=numberOfBits-lenY;
-        final double lngDelta = fastDoubleDecPow2(lenX, D360);// == 360/ Math.pow(2, lenX);
+        final double lngDelta = lenX==0? D360 : deltaCached[lenX-1];// == 360/ Math.pow(2, lenX);
         final double latDelta = lenX == lenY ? lngDelta /2 : lngDelta;//fastDoubleDecPow2(lenY, D180);// == 180/ Math.pow(2, lenY);
         final double minLat = latBits * latDelta - D90;
         final double maxLat = minLat + latDelta;
@@ -246,7 +252,7 @@ public final class GeoHash implements Comparable<GeoHash>{
         CheckLatLng(latitude, longitude, numberOfBits);
         final int lenY=numberOfBits>>>1;//numberOfBits/2
         final int lenX=numberOfBits-lenY;
-        final double lngDelta = fastDoubleDecPow2(lenX, D360);// == 360/ Math.pow(2, lenX);
+        final double lngDelta = lenX==0? D360 : deltaCached[lenX-1];// == 360/ Math.pow(2, lenX);
         final double latDelta = lenX == lenY ? lngDelta /2 : lngDelta;//fastDoubleDecPow2(lenY, D180);// == 180/ Math.pow(2, lenY);
         final long latBits = (long) Math.floor((latitude+ D90)/latDelta);
         final long lngBits = (long) Math.floor((longitude+ D180)/lngDelta);
@@ -271,24 +277,6 @@ public final class GeoHash implements Comparable<GeoHash>{
             lowestOneBit = bits & -bits;
         }
         return result;
-    }
-
-    private static double fastDoubleDecPow2(long exp, double tmp) {
-        long latRaw = Double.doubleToRawLongBits(tmp);
-        latRaw -= exp <<52;
-        return Double.longBitsToDouble(latRaw);
-    }
-
-    /**
-     * fast pow2 using mantissa format of doulbe
-     * @param exp
-     * @param tmp
-     * @return tmp * Math.pow(2,exp)
-     */
-    private static double fastDoublePow2(long exp, double tmp) {
-        long raw = Double.doubleToRawLongBits(tmp);
-        raw += exp <<52;
-        return Double.longBitsToDouble(raw);
     }
 
     private static void CheckLatLng(double latitude, double longitude, int numberOfBits) {
@@ -334,7 +322,7 @@ public final class GeoHash implements Comparable<GeoHash>{
         }
         latBits = lenX == lenY ?latBits:latBits>>>1;
 
-        final double lngDelta = fastDoubleDecPow2(lenX, D360);// == 360/ Math.pow(2, lenX);
+        final double lngDelta = lenX==0? D360 : deltaCached[lenX-1];// == 360/ Math.pow(2, lenX);
         final double latDelta = lenX == lenY ? lngDelta /2 : lngDelta;//fastDoubleDecPow2(lenY, D180);// == 180/ Math.pow(2, lenY);
         final double minLat = latBits * latDelta - D90;
         final double maxLat = minLat + latDelta;
