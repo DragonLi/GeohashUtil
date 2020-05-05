@@ -144,8 +144,8 @@ public class GeoHashTest {
 
         for (int i = 0; i < testCount; i++) {
             for (int numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
-                double lng=Math.random()*360-180;
-                double lat=Math.random()*180 -90;
+                double lng=r.nextFloat()*360-180;
+                double lat=r.nextFloat()*180 -90;
                 GeoHashSlow old = GeoHashSlow.withBitPrecision(lat,lng, numberOfBits);
                 GeoHash test = GeoHash.withBitPrecision(lat,lng, numberOfBits);
                 boolean ass = old.testEquals(test);
@@ -184,7 +184,7 @@ public class GeoHashTest {
         }
 
         System.out.println("elapsedFast: "+elapsedFast);
-        System.out.println("elapsedOld: "+elapsedOld);
+        System.out.println("elapsedOld : "+elapsedOld);
         double delta = (double)elapsedOld - (double)elapsedFast;
         System.out.println(delta/(double)elapsedOld);
     }

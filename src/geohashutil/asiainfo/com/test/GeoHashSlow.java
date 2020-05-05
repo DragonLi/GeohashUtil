@@ -5,6 +5,7 @@ import geohashutil.asiainfo.com.GeoHash;
 
 public class GeoHashSlow {
     private static final double D360 = 360;
+    private static final long DOUBLE_360 = Double.doubleToRawLongBits(GeoHashSlow.D360);
     private static final double D180 = 180;
     private static final double D90 = 90;
     private static final int MAX_BIT_PRECISION = 64;
@@ -53,9 +54,8 @@ public class GeoHashSlow {
         return Double.longBitsToDouble(raw);
     }
 
-    private static double fastDoubleDecPow2(long exp, double tmp) {
-        long latRaw = Double.doubleToRawLongBits(tmp);
-        latRaw -= exp <<52;
+    private static double fastDoubleDecPow2(long exp) {
+        long latRaw = DOUBLE_360 - (exp <<52);
         return Double.longBitsToDouble(latRaw);
     }
 
@@ -63,7 +63,7 @@ public class GeoHashSlow {
         CheckLatLng(latitude, longitude, numberOfBits);
         final int lenY=numberOfBits>>>1;//numberOfBits/2
         final int lenX=numberOfBits-lenY;
-        final double lngDelta = fastDoubleDecPow2(lenX, D360);// == 360/ Math.pow(2, lenX);
+        final double lngDelta = fastDoubleDecPow2(lenX);// == 360/ Math.pow(2, lenX);
         final double latDelta = lenX == lenY ? lngDelta /2 : lngDelta;//fastDoubleDecPow2(lenY, D180);// == 180/ Math.pow(2, lenY);
         final long latBits = (long) Math.floor((latitude+ D90)/latDelta);
         final long lngBits = (long) Math.floor((longitude+ D180)/lngDelta);
