@@ -7,11 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aaa8bcdb-2706-454f-bf59-44b3626945b4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/GridPoint.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/BoundingBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/BoundingBox.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/GeoHash.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/GeoHash.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/WGS84Point.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/WGS84Point.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/GeoHashTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/GeoHashTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeohashUtil.iml" beforeDir="false" afterPath="$PROJECT_DIR$/GeohashUtil.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +81,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/gridcoord1.1.jar!/" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/out/artifacts/GeohashUtil_jar" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -105,7 +101,7 @@
       <recent name="geohashutil.asiainfo.com" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.GeoHashTest.testFromPrefix">
+  <component name="RunManager" selected="JUnit.GeoHashTest.testFastGeohash">
     <configuration name="GeoHashTest" type="JUnit" factoryName="JUnit" nameIsGenerated="true">
       <module name="GeohashUtil" />
       <extension name="coverage">
@@ -120,6 +116,22 @@
       <method v="2">
         <option name="Make" enabled="true" />
         <option name="BSP.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GeoHashTest.testFastGeohash" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="GeohashUtil" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="geohashutil.asiainfo.com.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="geohashutil.asiainfo.com.test" />
+      <option name="MAIN_CLASS_NAME" value="geohashutil.asiainfo.com.test.GeoHashTest" />
+      <option name="METHOD_NAME" value="testFastGeohash" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
       </method>
     </configuration>
     <configuration name="GeoHashTest.testFromPrefix" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
@@ -140,6 +152,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.GeoHashTest.testFastGeohash" />
         <item itemvalue="JUnit.GeoHashTest.testFromPrefix" />
       </list>
     </recent_temporary>
@@ -163,6 +176,10 @@
       <workItem from="1585987405228" duration="1415000" />
       <workItem from="1586759934533" duration="610000" />
       <workItem from="1586955014712" duration="5019000" />
+      <workItem from="1588672904804" duration="680000" />
+      <workItem from="1588683886009" duration="461000" />
+      <workItem from="1588684374605" duration="86000" />
+      <workItem from="1588684479507" duration="225000" />
     </task>
     <servers />
   </component>
@@ -194,26 +211,26 @@
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
     <state x="674" y="113" width="563" height="846" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1056@0.0.1920.1056" timestamp="1586956837246" />
-    <state x="437" y="190" width="1062" height="770" key="FileChooserDialogImpl" timestamp="1586760150471">
+    <state x="437" y="190" width="1062" height="770" key="FileChooserDialogImpl" timestamp="1588684094415">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state x="437" y="190" width="1062" height="770" key="FileChooserDialogImpl/0.0.1920.1056@0.0.1920.1056" timestamp="1586760150471" />
-    <state width="1838" height="591" key="GridCell.Tab.0.bottom" timestamp="1586960336833">
+    <state x="437" y="190" width="1062" height="770" key="FileChooserDialogImpl/0.0.1920.1056@0.0.1920.1056" timestamp="1588684094415" />
+    <state width="1838" height="346" key="GridCell.Tab.0.bottom" timestamp="1588673584374">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="591" key="GridCell.Tab.0.bottom/0.0.1920.1056@0.0.1920.1056" timestamp="1586960336833" />
-    <state width="1838" height="591" key="GridCell.Tab.0.center" timestamp="1586960336831">
+    <state width="1838" height="346" key="GridCell.Tab.0.bottom/0.0.1920.1056@0.0.1920.1056" timestamp="1588673584374" />
+    <state width="1838" height="346" key="GridCell.Tab.0.center" timestamp="1588673584373">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="591" key="GridCell.Tab.0.center/0.0.1920.1056@0.0.1920.1056" timestamp="1586960336831" />
-    <state width="1838" height="591" key="GridCell.Tab.0.left" timestamp="1586960336829">
+    <state width="1838" height="346" key="GridCell.Tab.0.center/0.0.1920.1056@0.0.1920.1056" timestamp="1588673584373" />
+    <state width="1838" height="346" key="GridCell.Tab.0.left" timestamp="1588673584373">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="591" key="GridCell.Tab.0.left/0.0.1920.1056@0.0.1920.1056" timestamp="1586960336829" />
-    <state width="1838" height="591" key="GridCell.Tab.0.right" timestamp="1586960336832">
+    <state width="1838" height="346" key="GridCell.Tab.0.left/0.0.1920.1056@0.0.1920.1056" timestamp="1588673584373" />
+    <state width="1838" height="346" key="GridCell.Tab.0.right" timestamp="1588673584374">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="591" key="GridCell.Tab.0.right/0.0.1920.1056@0.0.1920.1056" timestamp="1586960336832" />
+    <state width="1838" height="346" key="GridCell.Tab.0.right/0.0.1920.1056@0.0.1920.1056" timestamp="1588673584374" />
     <state width="1838" height="591" key="GridCell.Tab.1.bottom" timestamp="1586960336836">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
@@ -230,10 +247,14 @@
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
     <state width="1838" height="591" key="GridCell.Tab.1.right/0.0.1920.1056@0.0.1920.1056" timestamp="1586960336835" />
-    <state x="218" y="0" width="1508" height="1056" key="SettingsEditor" timestamp="1586960330455">
+    <state x="218" y="0" width="1508" height="1056" key="SettingsEditor" timestamp="1588684642403">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state x="218" y="0" width="1508" height="1056" key="SettingsEditor/0.0.1920.1056@0.0.1920.1056" timestamp="1586960330455" />
+    <state x="218" y="0" width="1508" height="1056" key="SettingsEditor/0.0.1920.1056@0.0.1920.1056" timestamp="1588684642403" />
+    <state x="0" y="0" width="1912" height="1056" key="new project wizard" timestamp="1588684158489">
+      <screen x="0" y="0" width="1920" height="1056" />
+    </state>
+    <state x="0" y="0" width="1912" height="1056" key="new project wizard/0.0.1920.1056@0.0.1920.1056" timestamp="1588684158489" />
     <state x="453" y="-2" width="1009" height="1470" key="search.everywhere.popup" timestamp="1586958943447">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
