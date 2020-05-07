@@ -1,5 +1,3 @@
-package geohashutil.asiainfo.com.test;
-
 import geohashutil.asiainfo.com.GeoHash;
 
 import java.util.ArrayList;

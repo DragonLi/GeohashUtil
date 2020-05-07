@@ -1,5 +1,3 @@
-package geohashutil.asiainfo.com.test;
-
 import geohashutil.asiainfo.com.BoundingBox;
 import geohashutil.asiainfo.com.GeoHash;
 import geohashutil.asiainfo.com.GeoHashSearchUtil;
@@ -8,8 +6,6 @@ import javafx.util.Pair;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static geohashutil.asiainfo.com.GeoHash.commonPrefixLength;
@@ -146,8 +142,8 @@ public class GeoHashTest {
             for (int numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
                 double lng=r.nextFloat()*360-180;
                 double lat=r.nextFloat()*180 -90;
-                GeoHashSlow old = GeoHashSlow.withBitPrecision(lat,lng, numberOfBits);
                 GeoHash test = GeoHash.withBitPrecision(lat,lng, numberOfBits);
+                GeoHashSlow old = GeoHashSlow.withBitPrecision(lat,lng, numberOfBits);
                 boolean ass = old.testEquals(test);
                 if (!ass){
                     System.out.println(lng);

@@ -1,5 +1,3 @@
-package geohashutil.asiainfo.com.test;
-
 import geohashutil.asiainfo.com.BoundingBox;
 import geohashutil.asiainfo.com.GeoHash;
 
@@ -57,6 +55,11 @@ public class GeoHashSlow {
     private static double fastDoubleDecPow2(long exp) {
         long latRaw = DOUBLE_360 - (exp <<52);
         return Double.longBitsToDouble(latRaw);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s -> %s, bits: %d", Long.toBinaryString(bits), boundingBox, significantBits);
     }
 
     public static GeoHashSlow withBitPrecision(final double latitude, final double longitude, final int numberOfBits) {

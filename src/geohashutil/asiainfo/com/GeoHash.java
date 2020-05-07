@@ -18,6 +18,7 @@ public final class GeoHash implements Comparable<GeoHash>{
     private static final double D360 = 360;
     private static final double D90 = 90;
     private static final double[] deltaCached;
+    private static final int[] doubleOneBitMask;
 
     static {
         int sz = base32.length;
@@ -28,6 +29,10 @@ public final class GeoHash implements Comparable<GeoHash>{
         double tmp = D360;
         for (int i = 0; i < 64; i++) {
             deltaCached[i] = tmp = tmp/2.0d;
+        }
+        doubleOneBitMask = new int[256];
+        for (int i = 0; i < 256; i++) {
+            doubleOneBitMask[i] = interleavingInsertZeroHelper(i);
         }
     }
 
@@ -154,8 +159,8 @@ public final class GeoHash implements Comparable<GeoHash>{
         final double minLng = lngBits * lngDelta - D180;
         final double maxLng = minLng + lngDelta;
 
-        long lngInterleavingBits = interleavingInsertZero(lngBits);
-        long latInterleavingBits = interleavingInsertZero(lenX == lenY ? latBits : latBits<<1);
+        long lngInterleavingBits = interleavingInsertZero((int) lngBits);
+        long latInterleavingBits = interleavingInsertZero((int) (lenX == lenY ? latBits : latBits<<1));
         long bits = (lngInterleavingBits<<1) ^ latInterleavingBits;
         bits = bits << (MAX_BIT_PRECISION - (lenX<<1));
 
@@ -261,16 +266,24 @@ public final class GeoHash implements Comparable<GeoHash>{
         final double minLng = lngBits * lngDelta - D180;
         final double maxLng = minLng + lngDelta;
 
-        long lngInterleavingBits = interleavingInsertZero(lngBits);
-        long latInterleavingBits = interleavingInsertZero(lenX == lenY ? latBits : latBits<<1);
+        long lngInterleavingBits = interleavingInsertZero((int) lngBits);
+        long latInterleavingBits = interleavingInsertZero((int) (lenX == lenY ? latBits : latBits<<1));
         long bits = (lngInterleavingBits<<1) ^ latInterleavingBits;
         bits = bits << (MAX_BIT_PRECISION - (lenX<<1));
         return new GeoHash(bits, (byte) numberOfBits, latBits, lngBits, minLat, maxLat, minLng, maxLng);
     }
 
-    private static long interleavingInsertZero(long bits) {
-        long lowestOneBit = bits & -bits;
-        long result = 0;
+    private static long interleavingInsertZero(int bits) {
+        long result = doubleOneBitMask[(bits & 0xff)];
+        result += (long)(doubleOneBitMask[(bits>>>8) & 0xff]) << 16;
+        result += (long)(doubleOneBitMask[(bits>>>16) & 0xff]) << 32;
+        result += (long)(doubleOneBitMask[(bits>>>24) & 0xff]) << 48;
+        return result;
+    }
+
+    private static int interleavingInsertZeroHelper(int bits) {
+        int lowestOneBit = bits & -bits;
+        int result = 0;
         while (lowestOneBit != 0) {
             bits ^= lowestOneBit;//remove lowestOneBit
             result |= lowestOneBit * lowestOneBit;//left shift by the number of trailing zero
