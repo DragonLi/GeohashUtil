@@ -7,7 +7,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aaa8bcdb-2706-454f-bf59-44b3626945b4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/GeohashUtil.iml" beforeDir="false" afterPath="$PROJECT_DIR$/GeohashUtil.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/GeoHash.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/GeoHash.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/GeoHashSlow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/GeoHashSlow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/GeoHashTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/GeoHashTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/RandomGeohashes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/RandomGeohashes.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,35 +34,6 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>compareTo</find>
-      <find>getBoundingBox()</find>
-      <find>getBoundingBoxCenterPoint()</find>
-      <find>getLatitude()</find>
-      <find>getLongitude()</find>
-      <find>getRightAlignedLongitudeBits()</find>
-      <find>getRightAlignedLatitudeBits()</find>
-      <find>longValue()</find>
-      <find>equals(Object obj)</find>
-      <find>hashCode</find>
-      <find>&gt;&gt;&gt;</find>
-      <find>tosttring</find>
-      <find>equal</find>
-      <find>within</find>
-      <find>boundingbox</find>
-      <find>GeoHash</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>boundingBox</replace>
-      <replace>boundingBox.getCenterPoint()</replace>
-      <replace>latitude</replace>
-      <replace>longitude</replace>
-      <replace>latBits</replace>
-      <replace>lonBits</replace>
-      <replace>bits</replace>
-    </replaceStrings>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -78,6 +52,7 @@
     <property name="Repository.Attach.Annotations" value="false" />
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
@@ -91,7 +66,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
@@ -102,58 +77,39 @@
     </key>
   </component>
   <component name="RunManager" selected="JUnit.GeoHashTest.testFastGeohash">
-    <configuration name="GeoHashTest" type="JUnit" factoryName="JUnit" nameIsGenerated="true">
+    <configuration name="GeoHashTest.testFastGeohash" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="GeohashUtil" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="geohashutil.asiainfo.com.test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="geohashutil.asiainfo.com.test" />
-      <option name="MAIN_CLASS_NAME" value="geohashutil.asiainfo.com.test.GeoHashTest" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="GeoHashTest" />
+      <option name="METHOD_NAME" value="testFastGeohash" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+        <option name="BSP.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GeoHashTest.testFromLongFast" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="GeohashUtil" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="GeoHashTest" />
+      <option name="METHOD_NAME" value="testFromLongFast" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+        <option name="BSP.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
         <option name="BSP.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GeoHashTest.testFastGeohash" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="GeohashUtil" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="geohashutil.asiainfo.com.test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="geohashutil.asiainfo.com.test" />
-      <option name="MAIN_CLASS_NAME" value="geohashutil.asiainfo.com.test.GeoHashTest" />
-      <option name="METHOD_NAME" value="testFastGeohash" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="GeoHashTest.testFromPrefix" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="GeohashUtil" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="geohashutil.asiainfo.com.test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="geohashutil.asiainfo.com.test" />
-      <option name="MAIN_CLASS_NAME" value="geohashutil.asiainfo.com.test.GeoHashTest" />
-      <option name="METHOD_NAME" value="testFromPrefix" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.GeoHashTest.testFastGeohash" />
-        <item itemvalue="JUnit.GeoHashTest.testFromPrefix" />
+        <item itemvalue="JUnit.GeoHashTest.testFromLongFast" />
       </list>
     </recent_temporary>
   </component>
@@ -180,6 +136,8 @@
       <workItem from="1588683886009" duration="461000" />
       <workItem from="1588684374605" duration="86000" />
       <workItem from="1588684479507" duration="225000" />
+      <workItem from="1588864887889" duration="2522000" />
+      <workItem from="1588867433461" duration="18000" />
     </task>
     <servers />
   </component>
@@ -199,6 +157,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="410" y="39" width="1430" height="977" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1588865957024">
+      <screen x="0" y="0" width="1920" height="1056" />
+    </state>
+    <state x="410" y="39" width="1430" height="977" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1056@0.0.1920.1056" timestamp="1588865957024" />
     <state x="100" y="100" width="1720" height="856" key="#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog" timestamp="1586760259281">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
@@ -215,50 +177,54 @@
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
     <state x="437" y="190" width="1062" height="770" key="FileChooserDialogImpl/0.0.1920.1056@0.0.1920.1056" timestamp="1588684094415" />
-    <state width="1838" height="346" key="GridCell.Tab.0.bottom" timestamp="1588673584374">
+    <state width="1838" height="346" key="GridCell.Tab.0.bottom" timestamp="1588867410330">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="346" key="GridCell.Tab.0.bottom/0.0.1920.1056@0.0.1920.1056" timestamp="1588673584374" />
-    <state width="1838" height="346" key="GridCell.Tab.0.center" timestamp="1588673584373">
+    <state width="1838" height="346" key="GridCell.Tab.0.bottom/0.0.1920.1056@0.0.1920.1056" timestamp="1588867410330" />
+    <state width="1838" height="346" key="GridCell.Tab.0.center" timestamp="1588867410329">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="346" key="GridCell.Tab.0.center/0.0.1920.1056@0.0.1920.1056" timestamp="1588673584373" />
-    <state width="1838" height="346" key="GridCell.Tab.0.left" timestamp="1588673584373">
+    <state width="1838" height="346" key="GridCell.Tab.0.center/0.0.1920.1056@0.0.1920.1056" timestamp="1588867410329" />
+    <state width="1838" height="346" key="GridCell.Tab.0.left" timestamp="1588867410328">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="346" key="GridCell.Tab.0.left/0.0.1920.1056@0.0.1920.1056" timestamp="1588673584373" />
-    <state width="1838" height="346" key="GridCell.Tab.0.right" timestamp="1588673584374">
+    <state width="1838" height="346" key="GridCell.Tab.0.left/0.0.1920.1056@0.0.1920.1056" timestamp="1588867410328" />
+    <state width="1838" height="346" key="GridCell.Tab.0.right" timestamp="1588867410329">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="346" key="GridCell.Tab.0.right/0.0.1920.1056@0.0.1920.1056" timestamp="1588673584374" />
-    <state width="1838" height="591" key="GridCell.Tab.1.bottom" timestamp="1586960336836">
+    <state width="1838" height="346" key="GridCell.Tab.0.right/0.0.1920.1056@0.0.1920.1056" timestamp="1588867410329" />
+    <state width="1838" height="410" key="GridCell.Tab.1.bottom" timestamp="1588867410323">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="591" key="GridCell.Tab.1.bottom/0.0.1920.1056@0.0.1920.1056" timestamp="1586960336836" />
-    <state width="1838" height="591" key="GridCell.Tab.1.center" timestamp="1586960336834">
+    <state width="1838" height="410" key="GridCell.Tab.1.bottom/0.0.1920.1056@0.0.1920.1056" timestamp="1588867410323" />
+    <state width="1838" height="410" key="GridCell.Tab.1.center" timestamp="1588867410322">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="591" key="GridCell.Tab.1.center/0.0.1920.1056@0.0.1920.1056" timestamp="1586960336834" />
-    <state width="1838" height="591" key="GridCell.Tab.1.left" timestamp="1586960336833">
+    <state width="1838" height="410" key="GridCell.Tab.1.center/0.0.1920.1056@0.0.1920.1056" timestamp="1588867410322" />
+    <state width="1838" height="410" key="GridCell.Tab.1.left" timestamp="1588867410321">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="591" key="GridCell.Tab.1.left/0.0.1920.1056@0.0.1920.1056" timestamp="1586960336833" />
-    <state width="1838" height="591" key="GridCell.Tab.1.right" timestamp="1586960336835">
+    <state width="1838" height="410" key="GridCell.Tab.1.left/0.0.1920.1056@0.0.1920.1056" timestamp="1588867410321" />
+    <state width="1838" height="410" key="GridCell.Tab.1.right" timestamp="1588867410322">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="591" key="GridCell.Tab.1.right/0.0.1920.1056@0.0.1920.1056" timestamp="1586960336835" />
-    <state x="218" y="0" width="1508" height="1056" key="SettingsEditor" timestamp="1588684642403">
+    <state width="1838" height="410" key="GridCell.Tab.1.right/0.0.1920.1056@0.0.1920.1056" timestamp="1588867410322" />
+    <state x="218" y="0" width="1508" height="1056" key="SettingsEditor" timestamp="1588867407723">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state x="218" y="0" width="1508" height="1056" key="SettingsEditor/0.0.1920.1056@0.0.1920.1056" timestamp="1588684642403" />
+    <state x="218" y="0" width="1508" height="1056" key="SettingsEditor/0.0.1920.1056@0.0.1920.1056" timestamp="1588867407723" />
+    <state x="100" y="100" width="1720" height="856" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1588867230643">
+      <screen x="0" y="0" width="1920" height="1056" />
+    </state>
+    <state x="100" y="100" width="1720" height="856" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1056@0.0.1920.1056" timestamp="1588867230643" />
     <state x="0" y="0" width="1912" height="1056" key="new project wizard" timestamp="1588684158489">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
     <state x="0" y="0" width="1912" height="1056" key="new project wizard/0.0.1920.1056@0.0.1920.1056" timestamp="1588684158489" />
-    <state x="453" y="-2" width="1009" height="1470" key="search.everywhere.popup" timestamp="1586958943447">
+    <state x="453" y="-2" width="1009" height="1470" key="search.everywhere.popup" timestamp="1588866548488">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state x="453" y="-2" width="1009" height="1470" key="search.everywhere.popup/0.0.1920.1056@0.0.1920.1056" timestamp="1586958943447" />
+    <state x="453" y="-2" width="1009" height="1470" key="search.everywhere.popup/0.0.1920.1056@0.0.1920.1056" timestamp="1588866548488" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -270,13 +236,8 @@
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/geohashutil/asiainfo/com/GeoHash.java</url>
-          <line>368</line>
+          <line>381</line>
           <option name="timeStamp" value="11" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/GeoHashTest.java</url>
-          <line>32</line>
-          <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -285,24 +246,5 @@
     <SUITE FILE_PATH="coverage/GeohashUtil$GeoHashTest.ic" NAME="GeoHashTest Coverage Results" MODIFIED="1560059515041" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>geohashutil.asiainfo.com.*</FILTER>
     </SUITE>
-  </component>
-  <component name="debuggerHistoryManager">
-    <expressions id="evaluateExpression">
-      <expression>
-        <expression-string>other.significantBits == significantBits &amp;&amp; other.bits == bits</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>gh == decodedHash</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>assertEquals(gh, decodedHash)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-    </expressions>
   </component>
 </project>
