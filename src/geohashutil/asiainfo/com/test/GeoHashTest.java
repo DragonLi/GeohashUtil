@@ -88,14 +88,14 @@ public class GeoHashTest {
         System.out.println(t);
         System.out.println((int)t);
 
-        long a = 0x8f00000000000000l;
-        long b = 0x8000000000000000l;
-        long c = 0x8800000000000000l;
+        long a = 0x8f00000000000000L;
+        long b = 0x8000000000000000L;
+        long c = 0x8800000000000000L;
         assertPrefixLength(4, a, b);
         assertPrefixLength(4, b, c);
         assertPrefixLength(5, a, c);
         assertPrefixLength(0, 0x0, a);
-        assertPrefixLength(16, 0x8888300000000000l, 0x8888c00000000000l);
+        assertPrefixLength(16, 0x8888300000000000L, 0x8888c00000000000L);
     }
 
     private void assertPrefixLength(int length, long a, long b) {
@@ -136,33 +136,16 @@ public class GeoHashTest {
     public void testFastGeohash(){
         final int testCount = 100000;
         final long seed = System.nanoTime();
-        java.util.Random r = new java.util.Random(seed);
-
-        for (int i = 0; i < testCount; i++) {
-            for (int numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
-                double lng=r.nextFloat()*360-180;
-                double lat=r.nextFloat()*180 -90;
-                GeoHash test = GeoHash.withBitPrecision(lat,lng, numberOfBits);
-                GeoHashSlow old = GeoHashSlow.withBitPrecision(lat,lng, numberOfBits);
-                boolean ass = old.testEquals(test);
-                if (!ass){
-                    System.out.println(lng);
-                    System.out.println(lat);
-                    System.out.println(test);
-                    System.out.println(old);
-                }
-                assertTrue(ass);
-            }
-        }
+        java.util.Random r;
 
         r = new java.util.Random(seed);
         long elapsedOld = 0;
         for (int i = 0; i < testCount; i++) {
-            for (int numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
+            for (int numberOfBits = 1; numberOfBits <= 64; numberOfBits++) {
                 double lng=r.nextDouble()*360-180;
                 double lat=r.nextDouble()*180 -90;
                 long start = System.nanoTime();
-                GeoHashSlow test = GeoHashSlow.withBitPrecision(lat,lng, numberOfBits);
+                GeoHashSlow test = GeoHashSlow.v2(lat,lng, numberOfBits);
                 elapsedOld += System.nanoTime() - start;
             }
         }
@@ -170,7 +153,7 @@ public class GeoHashTest {
         r = new java.util.Random(seed);
         long elapsedFast = 0;
         for (int i = 0; i < testCount; i++) {
-            for (int numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
+            for (int numberOfBits = 1; numberOfBits <= 64; numberOfBits++) {
                 double lng=r.nextDouble()*360-180;
                 double lat=r.nextDouble()*180 -90;
                 long start = System.nanoTime();
@@ -183,6 +166,24 @@ public class GeoHashTest {
         System.out.println("elapsedOld : "+elapsedOld);
         double delta = (double)elapsedOld - (double)elapsedFast;
         System.out.println(delta/(double)elapsedOld);
+
+        for (int i = 0; i < testCount; i++) {
+            for (int numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
+                double lng=r.nextFloat()*360-180;
+                double lat=r.nextFloat()*180 -90;
+                GeoHash test = GeoHash.withBitPrecision(lat,lng, numberOfBits);
+                GeoHashSlow old = GeoHashSlow.v2(lat,lng, numberOfBits);
+                boolean ass = old.testEquals(test);
+                if (!ass){
+                    System.out.println(lng);
+                    System.out.println(lat);
+                    System.out.println(test);
+                    System.out.println(old);
+                }
+                assertTrue(ass);
+            }
+        }
+
     }
 
     @Test
@@ -361,14 +362,14 @@ public class GeoHashTest {
 
     @Test
     public void testToBase32() {
-        GeoHash hash = GeoHash.fromLongValue(0x6ff0414000000000l, (byte) 25);
+        GeoHash hash = GeoHash.fromLongValue(0x6ff0414000000000L, (byte) 25);
         String base32 = hash.toBase32();
         assertEquals("ezs42", base32);
     }
 
     @Test(expected = IllegalStateException.class)
     public void toBase32ShouldThrowWhenPrecisionIsNotAMultipleOf5() {
-        GeoHash hash = GeoHash.fromLongValue(0x6ff0413000000000l, (byte) 24);
+        GeoHash hash = GeoHash.fromLongValue(0x6ff0413000000000L, (byte) 24);
         hash.toBase32();
     }
 
@@ -392,20 +393,20 @@ public class GeoHashTest {
 
     @Test
     public void testWithin() {
-        GeoHash hash = GeoHash.fromLongValue(0x6ff0414000000000l, (byte) 25);
+        GeoHash hash = GeoHash.fromLongValue(0x6ff0414000000000L, (byte) 25);
         System.out.println(hash.toBase32());
         assertEquals("ezs42", hash.toBase32());
 
-        GeoHash bbox = GeoHash.fromLongValue(0x6ff0000000000000l, (byte) 12);
+        GeoHash bbox = GeoHash.fromLongValue(0x6ff0000000000000L, (byte) 12);
         assertWithin(hash, bbox);
     }
 
     @Test
     public void testNotWithin() {
-        GeoHash hash = GeoHash.fromLongValue(0x6ff0414000000000l, (byte) 25);
+        GeoHash hash = GeoHash.fromLongValue(0x6ff0414000000000L, (byte) 25);
         assertEquals("ezs42", hash.toBase32());
 
-        GeoHash bbox = GeoHash.fromLongValue(0x6fc0000000000000l, (byte) 12);
+        GeoHash bbox = GeoHash.fromLongValue(0x6fc0000000000000L, (byte) 12);
         assertFalse(hash + " should NOT be within " + bbox, hash.within(bbox));
     }
 
@@ -462,21 +463,21 @@ public class GeoHashTest {
     @Test
     public void testGetLatitudeBits() {
         GeoHash hash = GeoHash.withBitPrecision(30, 30, 16);
-        assertEquals(0xaal, hash.latBits);
+        assertEquals(0xaaL, hash.latBits);
         assertEquals(8, hash.getNumLatBits());
     }
 
     @Test
     public void testGetLongitudeBits() {
         GeoHash hash = GeoHash.withBitPrecision(30, 30, 16);
-        assertEquals(0x95l, hash.lonBits);
+        assertEquals(0x95L, hash.lonBits);
         assertEquals(8, hash.getNumLonBits());
     }
 
     @Test
     public void testNeighbourLocationCode() {
         // set up corner case
-        GeoHash hash = GeoHash.fromLongValue(0xc400000000000000l, (byte) 7);
+        GeoHash hash = GeoHash.fromLongValue(0xc400000000000000L, (byte) 7);
 
         assertEquals(0x8, hash.lonBits);
         assertEquals(4, hash.getNumLonBits());
@@ -484,25 +485,25 @@ public class GeoHashTest {
         assertEquals(3, hash.getNumLatBits());
 
         GeoHash north = hash.getNorthernNeighbour();
-        assertEquals(0xd000000000000000l, north.bits);
+        assertEquals(0xd000000000000000L, north.bits);
         assertEquals(7, north.significantBits);
 
         GeoHash south = hash.getSouthernNeighbour();
-        assertEquals(0xc000000000000000l, south.bits);
+        assertEquals(0xc000000000000000L, south.bits);
         assertEquals(7, south.significantBits);
 
         GeoHash east = hash.getEasternNeighbour();
-        assertEquals(0xc600000000000000l, east.bits);
+        assertEquals(0xc600000000000000L, east.bits);
 
         // NOTE: this is actually a corner case!
         GeoHash west = hash.getWesternNeighbour();
-        assertEquals(0x6e00000000000000l, west.bits);
+        assertEquals(0x6e00000000000000L, west.bits);
 
         // NOTE: and now, for the most extreme corner case in 7-bit geohash-land
-        hash = GeoHash.fromLongValue(0xfe00000000000000l, (byte) 7);
+        hash = GeoHash.fromLongValue(0xfe00000000000000L, (byte) 7);
 
         east = hash.getEasternNeighbour();
-        assertEquals(0x5400000000000000l, east.bits);
+        assertEquals(0x5400000000000000L, east.bits);
 
     }
 
@@ -753,7 +754,7 @@ public class GeoHashTest {
         double lat = 40.390943;
         double lon = 75.9375;
         GeoHash hash = GeoHash.withCharacterPrecision(lat, lon, 12);
-        assertEquals(0xcf6915015410500l, hash.ord());
+        assertEquals(0xcf6915015410500L, hash.ord());
         assertTrue(hash.ord() >= 0);
     }
 

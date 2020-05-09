@@ -130,7 +130,7 @@ public final class GeoHash implements Comparable<GeoHash>{
         }
 
         StringBuilder buf = new StringBuilder();
-        final long firstFiveBitsMask = 0xf800000000000000l;
+        final long firstFiveBitsMask = 0xf800000000000000L;
         long bitsCopy = bits;
         int partialChunks = (int) Math.ceil(((double) significantBits / 5));
 
@@ -146,25 +146,6 @@ public final class GeoHash implements Comparable<GeoHash>{
     protected GeoHash recombineLatLonBitsToHash(final long latBits, final long lonBits) {
         final byte significantBits = this.significantBits;
         return recombineLatLonBitsToHash(latBits, lonBits, significantBits);
-    }
-
-    private static GeoHash recombineLatLonBitsToHash(final long latBits, final long lngBits
-            , final byte numberOfBits) {
-        final int lenY=numberOfBits>>>1;//numberOfBits/2
-        final int lenX=numberOfBits-lenY;
-        final double lngDelta = lenX==0? D360 : deltaCached[lenX-1];// == 360/ Math.pow(2, lenX);
-        final double latDelta = lenX == lenY ? lngDelta /2 : lngDelta;//fastDoubleDecPow2(lenY, D180);// == 180/ Math.pow(2, lenY);
-        final double minLat = latBits * latDelta - D90;
-        final double maxLat = minLat + latDelta;
-        final double minLng = lngBits * lngDelta - D180;
-        final double maxLng = minLng + lngDelta;
-
-        long lngInterleavingBits = interleavingInsertZero((int) lngBits);
-        long latInterleavingBits = interleavingInsertZero((int) (lenX == lenY ? latBits : latBits<<1));
-        long bits = (lngInterleavingBits<<1) ^ latInterleavingBits;
-        bits = bits << (MAX_BIT_PRECISION - (lenX<<1));
-
-        return new GeoHash(bits, numberOfBits, latBits, lngBits, minLat, maxLat, minLng, maxLng);
     }
 
     public GeoHashNavIterator NavigateSquare(){
@@ -253,17 +234,37 @@ public final class GeoHash implements Comparable<GeoHash>{
         }
     }
 
+    private static GeoHash recombineLatLonBitsToHash(final long latBits, final long lngBits
+            , final byte numberOfBits) {
+        final int lenY=numberOfBits>>>1;//numberOfBits/2
+        final int lenX=numberOfBits-lenY;
+        final double lngDelta = lenX==0? D360 : deltaCached[lenX-1];// == 360/ Math.pow(2, lenX);
+        final double latDelta = lenX == lenY ? lngDelta /2 : lngDelta;//fastDoubleDecPow2(lenY, D180);// == 180/ Math.pow(2, lenY);
+        final double minLat = Double.longBitsToDouble(Double.doubleToRawLongBits((double) latBits)+((long) lenY <<52)) - D90;//TODO inline fastDoublePow2
+        final double maxLat = minLat + latDelta;
+        final double minLng = Double.longBitsToDouble(Double.doubleToRawLongBits((double) lngBits)+((long) lenX <<52)) - D180;
+        final double maxLng = minLng + lngDelta;
+
+        long lngInterleavingBits = interleavingInsertZero((int) lngBits);
+        long latInterleavingBits = interleavingInsertZero((int) (lenX == lenY ? latBits : latBits<<1));
+        long bits = (lngInterleavingBits<<1) ^ latInterleavingBits;
+        bits = bits << (MAX_BIT_PRECISION - (lenX<<1));
+
+        return new GeoHash(bits, numberOfBits, latBits, lngBits, minLat, maxLat, minLng, maxLng);
+    }
+
     public static GeoHash withBitPrecision(final double latitude, final double longitude, final int numberOfBits) {
         CheckLatLng(latitude, longitude, numberOfBits);
         final int lenY=numberOfBits>>>1;//numberOfBits/2
         final int lenX=numberOfBits-lenY;
         final double lngDelta = lenX==0? D360 : deltaCached[lenX-1];// == 360/ Math.pow(2, lenX);
-        final double latDelta = lenX == lenY ? lngDelta /2 : lngDelta;//fastDoubleDecPow2(lenY, D180);// == 180/ Math.pow(2, lenY);
-        final long latBits = (long) Math.floor((latitude+ D90)/latDelta);
-        final long lngBits = (long) Math.floor((longitude+ D180)/lngDelta);
-        final double minLat = latBits * latDelta - D90;
+        final double latDelta = lenX == lenY ? lngDelta /2 : lngDelta;// == 180/ Math.pow(2, lenY);
+        final long latBits = (long) ((latitude+ D90)/latDelta);
+        final long lngBits = (long) ((longitude+ D180)/lngDelta);
+        // inline fastDoublePow2
+        final double minLat = Double.longBitsToDouble(Double.doubleToRawLongBits((double) latBits)+((long) lenY <<52)) - D90;
         final double maxLat = minLat + latDelta;
-        final double minLng = lngBits * lngDelta - D180;
+        final double minLng = Double.longBitsToDouble(Double.doubleToRawLongBits((double) lngBits)+((long) lenX <<52)) - D180;
         final double maxLng = minLng + lngDelta;
 
         long lngInterleavingBits = interleavingInsertZero((int) lngBits);
@@ -337,9 +338,9 @@ public final class GeoHash implements Comparable<GeoHash>{
 
         final double lngDelta = lenX==0? D360 : deltaCached[lenX-1];// == 360/ Math.pow(2, lenX);
         final double latDelta = lenX == lenY ? lngDelta /2 : lngDelta;//fastDoubleDecPow2(lenY, D180);// == 180/ Math.pow(2, lenY);
-        final double minLat = latBits * latDelta - D90;
+        final double minLat = Double.longBitsToDouble(Double.doubleToRawLongBits((double) latBits)+((long) lenY <<52)) - D90;//TODO inline fastDoublePow2
         final double maxLat = minLat + latDelta;
-        final double minLng = lngBits * lngDelta - D180;
+        final double minLng = Double.longBitsToDouble(Double.doubleToRawLongBits((double) lngBits)+((long) lenX <<52)) - D180;
         final double maxLng = minLng + lngDelta;
 
         return new GeoHash(bits, significantBits, latBits, lngBits, minLat, maxLat, minLng, maxLng);
