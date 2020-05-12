@@ -68,9 +68,9 @@ public final class GeoHash implements Comparable<GeoHash>{
         final double latDelta = lenX == lenY ? lngDelta /2 : lngDelta;//fastDoubleDecPow2(lenY, D180);// == 180/ Math.pow(2, lenY);
         final long latBits = this.latBits >>> (this.getNumLatBits()-lenY);
         final long lngBits = this.lonBits >>> (this.getNumLonBits()-lenX);
-        final double minLat = latBits * latDelta - D90;
+        final double minLat = Double.longBitsToDouble(Double.doubleToRawLongBits((double) latBits)+((long) lenY <<52)) - D90;//TODO inline fastDoublePow2
         final double maxLat = minLat + latDelta;
-        final double minLng = lngBits * lngDelta - D180;
+        final double minLng = Double.longBitsToDouble(Double.doubleToRawLongBits((double) lngBits)+((long) lenX <<52)) - D180;
         final double maxLng = minLng + lngDelta;
         return new GeoHash(bits, (byte) numberOfBits, latBits, lngBits, minLat, maxLat, minLng, maxLng);
     }
@@ -87,9 +87,9 @@ public final class GeoHash implements Comparable<GeoHash>{
         final double latDelta = lenX == lenY ? lngDelta /2 : lngDelta;//fastDoubleDecPow2(lenY, D180);// == 180/ Math.pow(2, lenY);
         final long latBits = this.latBits >>> (this.getNumLatBits()-lenY);
         final long lngBits = this.lonBits >>> (this.getNumLonBits()-lenX);
-        final double minLat = latBits * latDelta - D90;
+        final double minLat = Double.longBitsToDouble(Double.doubleToRawLongBits((double) latBits)+((long) lenY <<52)) - D90;//TODO inline fastDoublePow2
         final double maxLat = minLat + latDelta;
-        final double minLng = lngBits * lngDelta - D180;
+        final double minLng = Double.longBitsToDouble(Double.doubleToRawLongBits((double) lngBits)+((long) lenX <<52)) - D180;
         final double maxLng = minLng + lngDelta;
         return new GeoHash(bits, numberOfBits, latBits, lngBits, minLat, maxLat, minLng, maxLng);
     }
@@ -283,14 +283,12 @@ public final class GeoHash implements Comparable<GeoHash>{
     }
 
     private static int interleavingInsertZeroHelper(int bits) {
-        int lowestOneBit = bits & -bits;
-        int result = 0;
-        while (lowestOneBit != 0) {
-            bits ^= lowestOneBit;//remove lowestOneBit
-            result |= lowestOneBit * lowestOneBit;//left shift by the number of trailing zero
-            lowestOneBit = bits & -bits;
-        }
-        return result;
+        bits |= bits << 16; bits &= 0x0000ffff0000ffffL;
+        bits |= bits << 8;  bits &= 0x00ff00ff00ff00ffL;
+        bits |= bits << 4;  bits &= 0x0f0f0f0f0f0f0f0fL;
+        bits |= bits << 2;  bits &= 0x3333333333333333L;
+        bits |= bits << 1;  bits &= 0x5555555555555555L;
+        return bits;
     }
 
     private static void CheckLatLng(double latitude, double longitude, int numberOfBits) {
