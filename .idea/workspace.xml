@@ -7,10 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aaa8bcdb-2706-454f-bf59-44b3626945b4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/GeoHash.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/GeoHash.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/GeoHashSlow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/GeoHashSlow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/GeoHashTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/GeoHashTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/RandomGeohashes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/RandomGeohashes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeohashUtil.iml" beforeDir="false" afterPath="$PROJECT_DIR$/GeohashUtil.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +27,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Singleton" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -56,7 +54,8 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/out/artifacts/GeohashUtil_jar" />
+    <property name="extract.method.default.visibility" value="private" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../大量参数传递的参考代码" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -66,17 +65,21 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="" />
+    </key>
     <key name="CreateClassDialog.RecentsKey">
+      <recent name="SatQuery" />
       <recent name="geohashutil.asiainfo.com" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.GeoHashTest.testFastGeohash">
+  <component name="RunManager" selected="JUnit.SatCfgTest.testSatParamCfg">
     <configuration name="GeoHashTest.testFastGeohash" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="GeohashUtil" />
       <option name="PACKAGE_NAME" value="" />
@@ -99,6 +102,23 @@
         <option name="BSP.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="SatCfgTest.testSatParamCfg" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="GeohashUtil" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="SatQuery.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="SatQuery" />
+      <option name="MAIN_CLASS_NAME" value="SatQuery.SatCfgTest" />
+      <option name="METHOD_NAME" value="testSatParamCfg" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+        <option name="BSP.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
@@ -108,6 +128,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.SatCfgTest.testSatParamCfg" />
         <item itemvalue="JUnit.GeoHashTest.testFastGeohash" />
         <item itemvalue="JUnit.GeoHashTest.testFromLongFast" />
       </list>
@@ -138,6 +159,11 @@
       <workItem from="1588684479507" duration="225000" />
       <workItem from="1588864887889" duration="2522000" />
       <workItem from="1588867433461" duration="18000" />
+      <workItem from="1590115426951" duration="3110000" />
+      <workItem from="1590119090218" duration="63000" />
+      <workItem from="1590119531958" duration="719000" />
+      <workItem from="1590125509099" duration="5268000" />
+      <workItem from="1590130861160" duration="56000" />
     </task>
     <servers />
   </component>
@@ -169,54 +195,70 @@
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
     <state x="576" y="285" width="760" height="502" key="#com.intellij.ide.actions.ChooseComponentsToExportDialog/0.0.1920.1056@0.0.1920.1056" timestamp="1586760189345" />
-    <state x="674" y="113" width="563" height="846" key="#com.intellij.ide.util.MemberChooser" timestamp="1586956837246">
+    <state x="674" y="113" width="563" height="846" key="#com.intellij.ide.util.MemberChooser" timestamp="1590126469107">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state x="674" y="113" width="563" height="846" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1056@0.0.1920.1056" timestamp="1586956837246" />
-    <state x="437" y="190" width="1062" height="770" key="FileChooserDialogImpl" timestamp="1588684094415">
+    <state x="674" y="113" width="563" height="846" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1056@0.0.1920.1056" timestamp="1590126469107" />
+    <state x="602" y="324" width="716" height="424" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1590116913721">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state x="437" y="190" width="1062" height="770" key="FileChooserDialogImpl/0.0.1920.1056@0.0.1920.1056" timestamp="1588684094415" />
-    <state width="1838" height="346" key="GridCell.Tab.0.bottom" timestamp="1588867410330">
+    <state x="602" y="324" width="716" height="424" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1056@0.0.1920.1056" timestamp="1590116913721" />
+    <state x="-1" y="-1" width="1922" height="1061" key="DetectedRootsChooserDialog" timestamp="1590119857164">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="346" key="GridCell.Tab.0.bottom/0.0.1920.1056@0.0.1920.1056" timestamp="1588867410330" />
-    <state width="1838" height="346" key="GridCell.Tab.0.center" timestamp="1588867410329">
+    <state x="-1" y="-1" width="1922" height="1061" key="DetectedRootsChooserDialog/0.0.1920.1056@0.0.1920.1056" timestamp="1590119857164" />
+    <state x="437" y="190" width="1074" height="770" key="FileChooserDialogImpl" timestamp="1590129849073">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="346" key="GridCell.Tab.0.center/0.0.1920.1056@0.0.1920.1056" timestamp="1588867410329" />
-    <state width="1838" height="346" key="GridCell.Tab.0.left" timestamp="1588867410328">
+    <state x="437" y="190" width="1074" height="770" key="FileChooserDialogImpl/0.0.1920.1056@0.0.1920.1056" timestamp="1590129849073" />
+    <state width="1838" height="597" key="GridCell.Tab.0.bottom" timestamp="1590130777241">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="346" key="GridCell.Tab.0.left/0.0.1920.1056@0.0.1920.1056" timestamp="1588867410328" />
-    <state width="1838" height="346" key="GridCell.Tab.0.right" timestamp="1588867410329">
+    <state width="1838" height="597" key="GridCell.Tab.0.bottom/0.0.1920.1056@0.0.1920.1056" timestamp="1590130777241" />
+    <state width="1838" height="597" key="GridCell.Tab.0.center" timestamp="1590130777240">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="346" key="GridCell.Tab.0.right/0.0.1920.1056@0.0.1920.1056" timestamp="1588867410329" />
-    <state width="1838" height="410" key="GridCell.Tab.1.bottom" timestamp="1588867410323">
+    <state width="1838" height="597" key="GridCell.Tab.0.center/0.0.1920.1056@0.0.1920.1056" timestamp="1590130777240" />
+    <state width="1838" height="597" key="GridCell.Tab.0.left" timestamp="1590130777240">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="410" key="GridCell.Tab.1.bottom/0.0.1920.1056@0.0.1920.1056" timestamp="1588867410323" />
-    <state width="1838" height="410" key="GridCell.Tab.1.center" timestamp="1588867410322">
+    <state width="1838" height="597" key="GridCell.Tab.0.left/0.0.1920.1056@0.0.1920.1056" timestamp="1590130777240" />
+    <state width="1838" height="597" key="GridCell.Tab.0.right" timestamp="1590130777240">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="410" key="GridCell.Tab.1.center/0.0.1920.1056@0.0.1920.1056" timestamp="1588867410322" />
-    <state width="1838" height="410" key="GridCell.Tab.1.left" timestamp="1588867410321">
+    <state width="1838" height="597" key="GridCell.Tab.0.right/0.0.1920.1056@0.0.1920.1056" timestamp="1590130777240" />
+    <state width="1838" height="597" key="GridCell.Tab.1.bottom" timestamp="1590130777241">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="410" key="GridCell.Tab.1.left/0.0.1920.1056@0.0.1920.1056" timestamp="1588867410321" />
-    <state width="1838" height="410" key="GridCell.Tab.1.right" timestamp="1588867410322">
+    <state width="1838" height="597" key="GridCell.Tab.1.bottom/0.0.1920.1056@0.0.1920.1056" timestamp="1590130777241" />
+    <state width="1838" height="597" key="GridCell.Tab.1.center" timestamp="1590130777241">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="410" key="GridCell.Tab.1.right/0.0.1920.1056@0.0.1920.1056" timestamp="1588867410322" />
-    <state x="218" y="0" width="1508" height="1056" key="SettingsEditor" timestamp="1588867407723">
+    <state width="1838" height="597" key="GridCell.Tab.1.center/0.0.1920.1056@0.0.1920.1056" timestamp="1590130777241" />
+    <state width="1838" height="597" key="GridCell.Tab.1.left" timestamp="1590130777241">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state x="218" y="0" width="1508" height="1056" key="SettingsEditor/0.0.1920.1056@0.0.1920.1056" timestamp="1588867407723" />
+    <state width="1838" height="597" key="GridCell.Tab.1.left/0.0.1920.1056@0.0.1920.1056" timestamp="1590130777241" />
+    <state width="1838" height="597" key="GridCell.Tab.1.right" timestamp="1590130777241">
+      <screen x="0" y="0" width="1920" height="1056" />
+    </state>
+    <state width="1838" height="597" key="GridCell.Tab.1.right/0.0.1920.1056@0.0.1920.1056" timestamp="1590130777241" />
+    <state x="218" y="0" width="1508" height="1056" key="SettingsEditor" timestamp="1590120035580">
+      <screen x="0" y="0" width="1920" height="1056" />
+    </state>
+    <state x="218" y="0" width="1508" height="1056" key="SettingsEditor/0.0.1920.1056@0.0.1920.1056" timestamp="1590120035580" />
     <state x="100" y="100" width="1720" height="856" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1588867230643">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
     <state x="100" y="100" width="1720" height="856" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1056@0.0.1920.1056" timestamp="1588867230643" />
+    <state x="470" y="372" width="995" height="357" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1590119722541">
+      <screen x="0" y="0" width="1920" height="1056" />
+    </state>
+    <state x="470" y="372" width="995" height="357" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD/0.0.1920.1056@0.0.1920.1056" timestamp="1590119722541" />
+    <state x="562" y="131" width="788" height="810" key="extract.method.dialog" timestamp="1590128062557">
+      <screen x="0" y="0" width="1920" height="1056" />
+    </state>
+    <state x="562" y="131" width="788" height="810" key="extract.method.dialog/0.0.1920.1056@0.0.1920.1056" timestamp="1590128062557" />
     <state x="0" y="0" width="1912" height="1056" key="new project wizard" timestamp="1588684158489">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
@@ -238,6 +280,11 @@
           <url>file://$PROJECT_DIR$/src/geohashutil/asiainfo/com/GeoHash.java</url>
           <line>381</line>
           <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/SatQuery/SatCfgTest.java</url>
+          <line>48</line>
+          <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
