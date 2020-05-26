@@ -39,8 +39,8 @@ public class GeoHashTest {
         for (int i = 0; i < testCount; i++) {
             long bits = r.nextLong();
             for (byte numberOfBits = 0; numberOfBits <= 64; numberOfBits++) {
-                GeoHash test = GeoHash.fromLongValue(bits, numberOfBits);
                 GeoHashSlow old = GeoHashSlow.fromLongValue(bits, numberOfBits);
+                GeoHash test = GeoHash.fromLongValue(bits, numberOfBits);
                 boolean ass = old.testEquals(test);
                 if (!ass){
                     System.out.println(Long.toBinaryString(bits));
@@ -403,6 +403,7 @@ public class GeoHashTest {
 
     @Test
     public void testNotWithin() {
+        GeoHashSlow t1 = GeoHashSlow.fromLongValue(0x6ff0414000000000L, (byte) 25);
         GeoHash hash = GeoHash.fromLongValue(0x6ff0414000000000L, (byte) 25);
         assertEquals("ezs42", hash.toBase32());
 
@@ -669,7 +670,8 @@ public class GeoHashTest {
         double lon = -75.9375;
         GeoHash hash = GeoHash.withCharacterPrecision(lat, lon, 10);
         long lv = hash.bits;
-        assertEquals(lv + (1 << (64 - hash.significantBits)), hash.next().bits);
+        GeoHash next = hash.next();
+        assertEquals(lv + (1 << (64 - hash.significantBits)), next.bits);
         GeoHash hashFromLong = GeoHash.fromLongValue(lv, hash.significantBits);
         assertEquals("dr4jb0bn21", hashFromLong.toBase32());
         assertEquals(hash, hashFromLong);
