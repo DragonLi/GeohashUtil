@@ -1,7 +1,5 @@
 package geohashutil.asiainfo.com;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.io.Serializable;
 
 public class BoundingBox implements Serializable {
@@ -122,7 +120,7 @@ public class BoundingBox implements Serializable {
     }
 
     public BoundingBoxNavIterator navigate() {
-        throw new NotImplementedException();
+        throw new RuntimeException("not implemented");
     }
 
     @Override

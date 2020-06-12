@@ -7,8 +7,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aaa8bcdb-2706-454f-bf59-44b3626945b4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/GeoHash.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/GeoHash.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/GeoHashSlow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/GeoHashSlow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/BoundingBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/BoundingBox.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/GeoHashSearchUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/GeoHashSearchUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/GeoHashTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/geohashutil/asiainfo/com/test/GeoHashTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -57,7 +59,8 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="extract.method.default.visibility" value="private" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../大量参数传递的参考代码" />
+    <property name="last_directory_selection" value="$PROJECT_DIR$/src" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -67,7 +70,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
@@ -153,6 +156,9 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="aaa8bcdb-2706-454f-bf59-44b3626945b4" name="Default Changelist" comment="" />
@@ -185,6 +191,7 @@
       <workItem from="1590130861160" duration="56000" />
       <workItem from="1590496753268" duration="11407000" />
       <workItem from="1590508259565" duration="42000" />
+      <workItem from="1591952556687" duration="589000" />
     </task>
     <servers />
   </component>
@@ -246,22 +253,22 @@
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
     <state x="437" y="190" width="1074" height="770" key="FileChooserDialogImpl/0.0.1920.1056@0.0.1920.1056" timestamp="1590129849073" />
-    <state width="1838" height="502" key="GridCell.Tab.0.bottom" timestamp="1590508298545">
+    <state width="1851" height="247" key="GridCell.Tab.0.bottom" timestamp="1591953145515">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="502" key="GridCell.Tab.0.bottom/0.0.1920.1056@0.0.1920.1056" timestamp="1590508298545" />
-    <state width="1838" height="502" key="GridCell.Tab.0.center" timestamp="1590508298545">
+    <state width="1851" height="247" key="GridCell.Tab.0.bottom/0.0.1920.1056@0.0.1920.1056" timestamp="1591953145515" />
+    <state width="1851" height="247" key="GridCell.Tab.0.center" timestamp="1591953145514">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="502" key="GridCell.Tab.0.center/0.0.1920.1056@0.0.1920.1056" timestamp="1590508298545" />
-    <state width="1838" height="502" key="GridCell.Tab.0.left" timestamp="1590508298544">
+    <state width="1851" height="247" key="GridCell.Tab.0.center/0.0.1920.1056@0.0.1920.1056" timestamp="1591953145514" />
+    <state width="1851" height="247" key="GridCell.Tab.0.left" timestamp="1591953145514">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="502" key="GridCell.Tab.0.left/0.0.1920.1056@0.0.1920.1056" timestamp="1590508298544" />
-    <state width="1838" height="502" key="GridCell.Tab.0.right" timestamp="1590508298545">
+    <state width="1851" height="247" key="GridCell.Tab.0.left/0.0.1920.1056@0.0.1920.1056" timestamp="1591953145514" />
+    <state width="1851" height="247" key="GridCell.Tab.0.right" timestamp="1591953145515">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state width="1838" height="502" key="GridCell.Tab.0.right/0.0.1920.1056@0.0.1920.1056" timestamp="1590508298545" />
+    <state width="1851" height="247" key="GridCell.Tab.0.right/0.0.1920.1056@0.0.1920.1056" timestamp="1591953145515" />
     <state width="1838" height="267" key="GridCell.Tab.1.bottom" timestamp="1590506831981">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
@@ -278,14 +285,18 @@
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
     <state width="1838" height="267" key="GridCell.Tab.1.right/0.0.1920.1056@0.0.1920.1056" timestamp="1590506831980" />
-    <state x="218" y="0" width="1508" height="1056" key="SettingsEditor" timestamp="1590120035580">
+    <state x="218" y="0" width="1508" height="1056" key="SettingsEditor" timestamp="1591952818538">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
-    <state x="218" y="0" width="1508" height="1056" key="SettingsEditor/0.0.1920.1056@0.0.1920.1056" timestamp="1590120035580" />
+    <state x="218" y="0" width="1508" height="1056" key="SettingsEditor/0.0.1920.1056@0.0.1920.1056" timestamp="1591952818538" />
     <state width="960" height="528" key="XDebugger.FullValuePopup" timestamp="1590506194663">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>
     <state width="960" height="528" key="XDebugger.FullValuePopup/0.0.1920.1056@0.0.1920.1056" timestamp="1590506194663" />
+    <state x="667" y="279" width="577" height="513" key="chooseDestDirectoryDialog" timestamp="1591952969176">
+      <screen x="0" y="0" width="1920" height="1056" />
+    </state>
+    <state x="667" y="279" width="577" height="513" key="chooseDestDirectoryDialog/0.0.1920.1056@0.0.1920.1056" timestamp="1591952969176" />
     <state x="100" y="100" width="1720" height="856" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1590508138113">
       <screen x="0" y="0" width="1920" height="1056" />
     </state>

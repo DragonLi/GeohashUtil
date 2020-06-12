@@ -1,8 +1,8 @@
+import com.asiainfo.cem.common.utils.Pairs;
 import geohashutil.asiainfo.com.BoundingBox;
 import geohashutil.asiainfo.com.GeoHash;
 import geohashutil.asiainfo.com.GeoHashSearchUtil;
 import geohashutil.asiainfo.com.WGS84Point;
-import javafx.util.Pair;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
@@ -283,9 +283,9 @@ public class GeoHashTest {
         WGS84Point a = WGS84Point.Create(lat,lng);
         WGS84Point b = WGS84Point.Create(lat+0.01,lng+0.01);
         BoundingBox box = new BoundingBox(a,b);
-        Pair<GeoHash,GeoHash> pair = GeoHashSearchUtil.leastBoundingGeoGrid(box);
-        GeoHash grid1 = pair.getKey();
-        GeoHash grid2 = pair.getValue();
+        Pairs<GeoHash,GeoHash> pair = GeoHashSearchUtil.leastBoundingGeoGrid(box);
+        GeoHash grid1 = pair.fst;
+        GeoHash grid2 = pair.snd;
         assertEquals(Long.toBinaryString(grid1.bits),"1110010011111011110110111000000000000000000000000000000000000000");
         assertEquals(grid1.significantBits,26);
         assertEquals(grid2,null);
@@ -294,8 +294,8 @@ public class GeoHashTest {
         GeoHash h1 = GeoHash.fromLongValue(0B1110010011111011110110110011000000000000000000000000000000000000L, (byte) 28);
         GeoHash h2 = GeoHash.fromLongValue(0B1110010011111011110110111001000000000000000000000000000000000000L, (byte) 28);
         pair = GeoHashSearchUtil.leastBoundingGeoGrid(h1,h2);
-        grid1 = pair.getKey();
-        grid2 = pair.getValue();
+        grid1 = pair.fst;
+        grid2 = pair.snd;
         assertEquals(Long.toBinaryString(grid1.bits),"1110010011111011110110110000000000000000000000000000000000000000");
         assertEquals(grid1.significantBits,26);
         assertEquals(Long.toBinaryString(grid2.bits),"1110010011111011110110111000000000000000000000000000000000000000");
@@ -305,8 +305,8 @@ public class GeoHashTest {
         h1 = GeoHash.fromLongValue(0B1110010011111011110110110111000000000000000000000000000000000000L, (byte) 28);
         h2 = GeoHash.fromLongValue(0B1110010011111011110110111001000000000000000000000000000000000000L, (byte) 28);
         pair = GeoHashSearchUtil.leastBoundingGeoGrid(h1,h2);
-        grid1 = pair.getKey();
-        grid2 = pair.getValue();
+        grid1 = pair.fst;
+        grid2 = pair.snd;
         assertEquals(Long.toBinaryString(grid1.bits),"1110010011111011110110110000000000000000000000000000000000000000");
         assertEquals(grid1.significantBits,24);
         assertEquals(grid2,null);
@@ -315,8 +315,8 @@ public class GeoHashTest {
         h1 = GeoHash.fromLongValue(0B1110010011111011110110110111000000000000000000000000000000000000L, (byte) 28);
         h2 = GeoHash.fromLongValue(0B1110010011111011110110111101000000000000000000000000000000000000L, (byte) 28);
         pair = GeoHashSearchUtil.leastBoundingGeoGrid(h1,h2);
-        grid1 = pair.getKey();
-        grid2 = pair.getValue();
+        grid1 = pair.fst;
+        grid2 = pair.snd;
         assertEquals(Long.toBinaryString(grid1.bits),"1110010011111011110110110100000000000000000000000000000000000000");
         assertEquals(grid1.significantBits,26);
         assertEquals(Long.toBinaryString(grid2.bits),"1110010011111011110110111100000000000000000000000000000000000000");
@@ -326,8 +326,8 @@ public class GeoHashTest {
         h1 = GeoHash.fromLongValue(0B1110010011111011110110111111000000000000000000000000000000000000L, (byte) 28);
         h2 = GeoHash.fromLongValue(0B1110010011111011110110111001000000000000000000000000000000000000L, (byte) 28);
         pair = GeoHashSearchUtil.leastBoundingGeoGrid(h1,h2);
-        grid1 = pair.getKey();
-        grid2 = pair.getValue();
+        grid1 = pair.fst;
+        grid2 = pair.snd;
         assertEquals(Long.toBinaryString(grid1.bits),"1110010011111011110110111100000000000000000000000000000000000000");
         assertEquals(grid1.significantBits,26);
         assertEquals(Long.toBinaryString(grid2.bits),"1110010011111011110110111000000000000000000000000000000000000000");
@@ -337,8 +337,8 @@ public class GeoHashTest {
         h1 = GeoHash.fromLongValue(0B1110010011111011110110110111000000000000000000000000000000000000L, (byte) 28);
         h2 = GeoHash.fromLongValue(0B1110010011111011110110110001000000000000000000000000000000000000L, (byte) 28);
         pair = GeoHashSearchUtil.leastBoundingGeoGrid(h1,h2);
-        grid1 = pair.getKey();
-        grid2 = pair.getValue();
+        grid1 = pair.fst;
+        grid2 = pair.snd;
         assertEquals(Long.toBinaryString(grid1.bits),"1110010011111011110110110100000000000000000000000000000000000000");
         assertEquals(grid1.significantBits,26);
         assertEquals(Long.toBinaryString(grid2.bits),"1110010011111011110110110000000000000000000000000000000000000000");

@@ -1,6 +1,7 @@
 package geohashutil.asiainfo.com;
 
-import javafx.util.Pair;
+
+import com.asiainfo.cem.common.utils.Pairs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,13 +49,13 @@ public class GeoHashSearchUtil {
         */
     }
 
-    public static Pair<GeoHash,GeoHash> leastBoundingGeoGrid(BoundingBox box){
+    public static Pairs<GeoHash,GeoHash> leastBoundingGeoGrid(BoundingBox box){
         GeoHash leftTop = box.getUpperLeftHash(MAX_LEVEL);
         GeoHash rightBottom = box.getLowerRightHash(MAX_LEVEL);
         return leastBoundingGeoGrid(leftTop, rightBottom);
     }
 
-    public static Pair<GeoHash, GeoHash> leastBoundingGeoGrid(GeoHash leftTop, GeoHash rightBottom) {
+    public static Pairs<GeoHash, GeoHash> leastBoundingGeoGrid(GeoHash leftTop, GeoHash rightBottom) {
         byte prefixIndex = comparePrefix(leftTop.bits,rightBottom.bits);
         byte prefixAdjust;
         if (prefixIndex%2 == 0){
@@ -63,7 +64,7 @@ public class GeoHashSearchUtil {
                 long cmp = leftTop.bits ^ rightBottom.bits;
                 long test = cmp & testNextIndex;
                 if (test > 0){
-                    return new Pair<>(leftTop.fromPrefix(prefixIndex),null);
+                    return new Pairs<>(leftTop.fromPrefix(prefixIndex),null);
                 }
             }
             prefixAdjust =2;
@@ -71,7 +72,7 @@ public class GeoHashSearchUtil {
             prefixAdjust=1;
         }
         prefixIndex -=prefixAdjust;
-        return new Pair<>(leftTop.fromPrefix(prefixIndex),rightBottom.fromPrefix(prefixIndex));
+        return new Pairs<>(leftTop.fromPrefix(prefixIndex),rightBottom.fromPrefix(prefixIndex));
     }
 
     public static List<GeoHash> leastBoundingSlice(final BoundingBox box,final int maxLen){
